@@ -22,9 +22,9 @@
   .cta:hover { transform:translateY(-2px); }
   .cta img { height:62px; width:auto; display:block; }
   footer .cta { margin-top:0; }
-  nav { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); padding:9px 12px; display:flex; gap:7px; flex-wrap:wrap; justify-content:center; }
-  nav a { color:var(--accent); text-decoration:none; font-size:.8rem; padding:3px 10px; border:1px solid var(--line); border-radius:999px; }
-  nav a:hover { background:var(--card); }
+  nav { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); padding:12px; display:flex; gap:9px; flex-wrap:wrap; justify-content:center; }
+  nav a { color:var(--accent); text-decoration:none; font-size:.9rem; font-weight:500; padding:7px 16px; background:var(--card); border:1px solid var(--line); border-radius:999px; box-shadow:0 2px 7px rgba(0,0,0,.18); transition:transform .12s, box-shadow .12s, background .12s, color .12s; }
+  nav a:hover { background:var(--accent); color:#fff; border-color:var(--accent); transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.30); }
   main { max-width:1240px; margin:0 auto; padding:8px 28px 90px; }
   section { padding-top:44px; }
   /* Keep prose at a readable measure even though the page is wide; galleries use the full width. */
@@ -50,10 +50,10 @@
   /* Phones: the 17-chip nav would wrap into ~10 rows and swallow the screen. Make it one
      horizontally-scrollable strip instead, and tighten the hero. */
   @media (max-width:720px) {
-    nav { flex-wrap:nowrap; overflow-x:auto; justify-content:flex-start; gap:6px; padding:8px 10px;
-           -webkit-overflow-scrolling:touch; scrollbar-width:none; }
-    nav::-webkit-scrollbar { display:none; }
-    nav a { flex:0 0 auto; white-space:nowrap; }
+    /* Wrapped, bigger chips that sit at the top and scroll away (non-sticky) — a pinned 17-chip
+       wrapped nav would swallow the phone screen. */
+    nav { position:static; flex-wrap:wrap; justify-content:center; gap:9px; padding:14px 12px; }
+    nav a { font-size:.95rem; padding:9px 16px; }
     main { padding:8px 16px 70px; }
     header.hero { padding:60px 18px 50px; }
     header.hero p { font-size:1rem; }
@@ -383,7 +383,7 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
   <a class="cta" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play"><img src="img/google-play-badge.svg" alt="Get it on Google Play"></a>
 </section>
 <section class="thanks">
-  <p>Thanks to the people who each helped bring this to life in their own way — <strong>Alina, Gabi, Darko, Dad, Mom, Narcis, Grasu and Rogo</strong>. Without some of them, it simply wouldn't exist.</p>
+  <p>Thanks to the people who each helped bring this to life in their own way — <strong>Alina, Gabi, Darko, my parents, Narcis, Grasu and Rogo</strong>. Without some of them, it simply wouldn't exist.</p>
 </section>
 </main>
 <footer>Garden Reads — read deeply, privately, and at your own pace. 🌱</footer>
