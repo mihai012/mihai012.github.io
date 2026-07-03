@@ -1,4 +1,1 @@
-# app-ads.txt for Garden Reads (com.gardenreading)
-# Replace the line below with the EXACT line shown in AdMob → Apps → app-ads.txt.
-# Format: <ad-network domain>, <your publisher ID>, DIRECT, <certification authority ID>
-google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+google.com, pub-8525911062877936, DIRECT, f08c47fec0942fa0
