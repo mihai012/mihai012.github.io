@@ -16,7 +16,7 @@
     background:#22301d url("img/hero-bg.webp") center top/cover no-repeat; }
   header.hero::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center, rgba(10,16,8,.45), rgba(10,16,8,.15) 60%, transparent 80%); }
   header.hero > * { position:relative; z-index:1; }
-  header.hero h1 { font-family:Georgia,serif; font-size:2.9rem; margin:0 0 14px; color:#fff; text-shadow:0 2px 14px rgba(0,0,0,.45); }
+  header.hero h1 { font-family:Georgia,serif; font-size:clamp(2.4rem, 6.5vw, 5rem); margin:0 0 16px; color:#fff; text-shadow:0 2px 14px rgba(0,0,0,.45); }
   header.hero p { color:rgba(255,255,255,.9); font-size:1.15rem; max-width:940px; margin:0 auto; font-style:italic; text-shadow:0 1px 10px rgba(0,0,0,.4); }
   .cta { display:inline-block; margin-top:26px; line-height:0; transition:transform .12s; }
   .cta:hover { transform:translateY(-2px); }
@@ -37,16 +37,16 @@
   th { background:var(--card); }
   code { background:var(--card); border:1px solid var(--line); border-radius:5px; padding:1px 5px; font-size:.9em; }
   /* frameless screenshots — the phone mockups / crops carry their own edges */
-  .shots { display:flex; flex-wrap:wrap; align-items:flex-start; gap:18px; margin:22px 0; }
+  /* Responsive grid: columns stretch (1fr) to use the FULL page width; landscape crops span two. */
+  .shots { display:grid; grid-template-columns:repeat(auto-fill, minmax(175px, 1fr)); align-items:start; gap:18px; margin:22px 0; }
   .shots figure { margin:0; cursor:zoom-in; }
-  .shots figure.portrait { width:172px; }
-  .shots figure.landscape { width:380px; max-width:100%; }
+  .shots figure.landscape { grid-column:span 2; }
   .shots img { width:100%; display:block; border-radius:8px; }
   /* Reserve 2 lines + bottom-align so a wrapping caption doesn't push its screenshot out of row alignment. */
   .shots figcaption { padding:0 2px 7px; min-height:3em; display:flex; align-items:flex-end; justify-content:center; font-size:.8rem; line-height:1.25; font-weight:600; color:var(--ink); text-align:center; }
-  .shots.big { justify-content:center; gap:22px; }
+  .shots.big { display:flex; justify-content:flex-start; gap:22px; }
   .shots.big figure.portrait { width:300px; }
-  .shots.big figure.landscape { width:min(600px,100%); }
+  .shots.big figure.landscape { width:min(600px,100%); grid-column:auto; }
   /* Phones: the 17-chip nav would wrap into ~10 rows and swallow the screen. Make it one
      horizontally-scrollable strip instead, and tighten the hero. */
   @media (max-width:720px) {
@@ -56,10 +56,14 @@
     nav a { flex:0 0 auto; white-space:nowrap; }
     main { padding:8px 16px 70px; }
     header.hero { padding:60px 18px 50px; }
-    header.hero h1 { font-size:2.1rem; }
     header.hero p { font-size:1rem; }
     h2 { font-size:1.5rem; }
   }
+  .closing { text-align:center; padding:64px 20px 8px; border-top:1px solid var(--line); margin-top:56px; }
+  .closing h2 { border:none; max-width:none; margin-bottom:12px; }
+  .closing p { max-width:600px; margin:0 auto 6px; color:var(--muted); }
+  .thanks { text-align:center; padding:30px 20px 0; }
+  .thanks p { max-width:620px; margin:0 auto; color:var(--muted); font-size:.9rem; font-style:italic; }
   footer { text-align:center; color:var(--muted); font-size:.82rem; padding:40px 20px; border-top:1px solid var(--line); margin-top:40px; }
   #lb { position:fixed; inset:0; background:rgba(0,0,0,.86); display:none; align-items:center; justify-content:center; z-index:50; cursor:zoom-out; padding:24px; }
   #lb img { max-width:100%; max-height:100%; border-radius:12px; }
@@ -77,6 +81,14 @@
 the formats you already own, keeps everything <strong>on your device by default</strong>, and wraps the experience
 in a quiet garden aesthetic — an animated sky‑and‑grass scene in the library drawer, frosted‑glass
 reading pop‑ups, and seasonal page themes.</p>
+<p>Most reading apps are storefronts first and readers second — built to keep you inside an ecosystem,
+track what you read, and sell you the next thing. Garden Reads is the opposite: a calm home for the
+books you <strong>already own</strong>. There's no store, no account to create, and nothing leaves your phone by
+default. Import your library once and it's genuinely yours — to read, annotate, listen to, and learn
+from, online or completely offline.</p>
+<p>If you've got books scattered around — classics you keep meaning to finish, a folder of PDFs and
+textbooks, a comic backlog, a few audiobooks — this is a home for all of it. It's for people who'd
+rather keep their own library than rent one from a store.</p>
 <p>Three principles run through the whole app:</p>
 <ul>
 <li><strong>You own your library.</strong> Books live in the app's storage; nothing is streamed from us. Optional
@@ -88,7 +100,9 @@ reading pop‑ups, and seasonal page themes.</p>
 </ul>
 <h3>First run</h3>
 <p>A short onboarding introduces the app, helps you import your first books (or add free classics in one
-tap), and offers to set up optional cloud sync — so a fresh install is never an empty shelf.</p><div class="shots"><figure class="portrait"><figcaption>Welcome</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%201.webp?v=1783091668" alt="Welcome" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Add your books</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%202.webp?v=1783091668" alt="Add your books" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Read &amp; listen</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%203.webp?v=1783091668" alt="Read &amp; listen" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>AI in every book</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%204.webp?v=1783091668" alt="AI in every book" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Never lose progress</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%205.webp?v=1783091668" alt="Never lose progress" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Ready to read</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%206.webp?v=1783091668" alt="Ready to read" onclick="zoom(this)"></figure></div><h3>Supported formats</h3>
+tap), and offers to set up optional cloud sync — so a fresh install is never an empty shelf.</p><div class="shots"><figure class="portrait"><figcaption>Welcome</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%201.webp?v=1783091668" alt="Welcome" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Read &amp; listen</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%202.webp?v=1783091668" alt="Read &amp; listen" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Add your books</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%203.webp?v=1783091668" alt="Add your books" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>AI in every book</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%204.webp?v=1783091668" alt="AI in every book" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Never lose progress</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%205.webp?v=1783091668" alt="Never lose progress" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Import from other readers</figcaption><img loading="lazy" src="img/Onboarding%20Flow/Page%206.webp?v=1783091668" alt="Import from other readers" onclick="zoom(this)"></figure></div><h3>Supported formats</h3>
+<p>One app for your entire library — novels, textbooks, comics, and audiobooks all live side by side, no
+converting or juggling separate apps:</p>
 <table>
 <thead>
 <tr>
@@ -116,7 +130,7 @@ tap), and offers to set up optional cloud sync — so a fresh install is never a
 </tbody>
 </table>
 <p>Ebooks render in a tuned reading engine; PDFs use a native page renderer; comics show full‑bleed
-pages; audiobooks open in the player. The reader picks the right engine automatically per book.</p><div class="shots"><figure class="portrait"><figcaption>Clean reading view</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Reader%20Epub%20Clean.webp?v=1783091668" alt="Clean reading view" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>PDF reader</figcaption><img loading="lazy" src="img/Reader%20and%20Player/PDF.webp?v=1783091668" alt="PDF reader" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Comic reader</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Comic%20Book.webp?v=1783091668" alt="Comic reader" onclick="zoom(this)"></figure></div></section><section id="s2"><h2>2. AI Learning Mode (Ask Gemma)</h2><p>Make use of the hardware you paid for. Garden Reads includes an optional <strong>on‑device</strong> AI assistant powered by <strong>Gemma 4</strong>. It is downloaded
+pages; audiobooks open in the player. The reader picks the right engine automatically per book.</p><div class="shots"><figure class="portrait"><figcaption>Ebook reader</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Reader%20Epub%20Clean.webp?v=1783091668" alt="Ebook reader" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>PDF reader</figcaption><img loading="lazy" src="img/Reader%20and%20Player/PDF.webp?v=1783091668" alt="PDF reader" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Comic reader</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Comic%20Book.webp?v=1783091668" alt="Comic reader" onclick="zoom(this)"></figure></div></section><section id="s2"><h2>2. AI Learning Mode (Ask Gemma)</h2><p>Make use of the hardware you paid for. Garden Reads includes an optional <strong>on‑device</strong> AI assistant powered by <strong>Gemma 4</strong>. It is downloaded
 once and then runs <strong>entirely locally</strong> — your books, thoughts and questions never leave the device, and it
 works offline.</p>
 <ul>
@@ -125,9 +139,18 @@ works offline.</p>
 <li><strong>Deep Think = ON/OFF</strong> trades speed for more thorough answers.</li>
 <li><strong>Spoilers = ON/OFF</strong> lets you keep the assistant from revealing what's ahead.</li>
 </ul>
+<p>Because the model lives on your phone, there's no subscription and no per‑question server bill — after
+the one‑time download it's yours to use as much as you like, even in airplane mode. Nothing you
+highlight or ask is uploaded, logged, or used to train anything; the conversation exists only on your
+device.</p>
 <p>It's framed as a learning tool, not a shortcut: use it to understand tough chapters and explore ideas,
 while your thinking stays yours.</p><div class="shots"><figure class="portrait"><figcaption>Choose a model</figcaption><img loading="lazy" src="img/AI/Model%20Selection.webp?v=1783091668" alt="Choose a model" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Downloading the model</figcaption><img loading="lazy" src="img/AI/AI%20Download.webp?v=1783091668" alt="Downloading the model" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>AI Learning Mode</figcaption><img loading="lazy" src="img/AI/AI.webp?v=1783091668" alt="AI Learning Mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Ask Gemma</figcaption><img loading="lazy" src="img/AI/AI%20Chat.webp?v=1783091668" alt="Ask Gemma" onclick="zoom(this)"></figure></div></section><section id="s3"><h2>3. The Reader</h2><p>Open a book to read. Tap the center of the page to toggle the menu. It will expose the table of
-contents, search, settings, bookmarks, highlights, the per‑book vocabulary sheet, and more.</p><div class="shots"><figure class="portrait"><figcaption>Tap zones &amp; navigation</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Page%20Navigation.webp?v=1783091668" alt="Tap zones &amp; navigation" onclick="zoom(this)"></figure><figure class="landscape"><figcaption>The reader menu</figcaption><img loading="lazy" src="img/Tools/Menu.webp?v=1783091668" alt="The reader menu" onclick="zoom(this)"></figure></div><h3>Navigation</h3>
+contents, search, settings, bookmarks, highlights, the per‑book vocabulary sheet, and more.</p><div class="shots"><figure class="portrait"><figcaption>Tap zones &amp; navigation</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Page%20Navigation.webp?v=1783091668" alt="Tap zones &amp; navigation" onclick="zoom(this)"></figure><figure class="landscape"><figcaption>The reader menu</figcaption><img loading="lazy" src="img/Tools/Menu.webp?v=1783091668" alt="The reader menu" onclick="zoom(this)"></figure></div><p>The reading engine is tuned for comfort and control. It quietly normalizes the wildly different
+stylesheets publishers ship into one consistent, legible page — while preserving footnotes, images,
+and structure — and reflows instantly as you change fonts, spacing, or margins. Whatever the format,
+each book opens in the right reader automatically, with everything you need one tap away and nothing
+in your way while you read.</p>
+<h3>Navigation</h3>
 <ul>
 <li><strong>Paged</strong> mode turns pages with a tap on the page edges and/or a swipe (you choose: tap‑only,
   swipe‑only, or both), with page‑turn animations: <strong>none, slide, curl, or fade</strong>.</li>
@@ -205,9 +228,10 @@ word's <strong>translations appear as rows</strong> under the headword, above th
 <p>A <strong>Lookup priority</strong> control lets you order the sources (in‑app dictionaries, dictionary app,
 online) so the first one with a result wins. A separate <strong>Lookup language</strong> setting can force a
 language or auto‑detect.</p><div class="shots"><figure class="landscape"><figcaption>In-line translation</figcaption><img loading="lazy" src="img/Tools/Translations/Translation.webp?v=1783091668" alt="In-line translation" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Send to Google Translate</figcaption><img loading="lazy" src="img/Tools/Translations/Google%20Translate%201.webp?v=1783091668" alt="Send to Google Translate" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Translation result</figcaption><img loading="lazy" src="img/Tools/Translations/Google%20Translate%202.webp?v=1783091668" alt="Translation result" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Offline translation</figcaption><img loading="lazy" src="img/Tools/Translations/Offline%20Translation%201.webp?v=1783091668" alt="Offline translation" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Translation package</figcaption><img loading="lazy" src="img/Tools/Translations/Offline%20Translation%202.webp?v=1783091668" alt="Translation package" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Word translations in-line</figcaption><img loading="lazy" src="img/Tools/Translations/Offline%20Translation%203.webp?v=1783091668" alt="Word translations in-line" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Custom online dictionary</figcaption><img loading="lazy" src="img/Tools/Translations/Custom%20Dictionary%20URL.webp?v=1783091668" alt="Custom online dictionary" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Lookup priority</figcaption><img loading="lazy" src="img/Tools/Translations/Search%20Priority.webp?v=1783091668" alt="Lookup priority" onclick="zoom(this)"></figure></div><blockquote>
-<p>Free vs Pro: looking up, saving words, and the vocabulary list are <strong>free</strong>. Importing custom
-dictionaries, downloading language packs, custom online URLs, and selecting an external dictionary
-app are <strong>Pro</strong>.</p>
+<p>Free vs Pro: <strong>looking a word up is free.</strong> Saving words and the vocabulary list are <strong>Pro</strong> — a word
+can only be saved once you've installed an offline dictionary/translation pack, and those packs (along
+with importing custom dictionaries, custom online URLs, and selecting an external dictionary app) are
+Pro.</p>
 </blockquote></section><section id="s7"><h2>7. Vocabulary</h2><p>Saved words go to your <strong>Vocabulary</strong>:</p>
 <ul>
 <li><strong>Settings → Saved words</strong> shows every word you've saved, in a library‑style screen (list/grid,
@@ -215,18 +239,24 @@ app are <strong>Pro</strong>.</p>
 <li>The reader's per‑book <strong>Vocabulary sheet</strong> shows only the current book's words.</li>
 </ul>
 <p>Saved words deliberately outlive the book they came from (deleting a book never deletes its words),
-and the source title is kept so you remember where a word came from.</p><div class="shots"><figure class="portrait"><figcaption>Saved words</figcaption><img loading="lazy" src="img/Dictionary/Vocabulary%20Grid.webp?v=1783091668" alt="Saved words" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Per-book vocabulary</figcaption><img loading="lazy" src="img/Tools/Sheet%20Vocabulary.webp?v=1783091668" alt="Per-book vocabulary" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Definition card</figcaption><img loading="lazy" src="img/Dictionary/Vocabulary%20Card.webp?v=1783091668" alt="Definition card" onclick="zoom(this)"></figure></div></section><section id="s8"><h2>8. Listening: audiobooks &amp; text‑to‑speech</h2><h3>Audiobooks</h3>
+and the source title is kept so you remember where a word came from.</p>
+<p>Saving words builds on the offline dictionary/translation packs, so the vocabulary features are <strong>Pro</strong>.</p><div class="shots"><figure class="portrait"><figcaption>Saved words</figcaption><img loading="lazy" src="img/Dictionary/Vocabulary%20Grid.webp?v=1783091668" alt="Saved words" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Per-book vocabulary</figcaption><img loading="lazy" src="img/Tools/Sheet%20Vocabulary.webp?v=1783091668" alt="Per-book vocabulary" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Definition card</figcaption><img loading="lazy" src="img/Dictionary/Vocabulary%20Card.webp?v=1783091668" alt="Definition card" onclick="zoom(this)"></figure></div></section><section id="s8"><h2>8. Listening: audiobooks &amp; text‑to‑speech</h2><p>Not in the mood to stare at a screen? Flip the library over to Listen and let your audiobooks take over
+— or have any ebook read aloud to you.</p>
+<h3>Audiobooks</h3>
 <p>Switch the library to <strong>Listen</strong> mode for your audiobooks. The player offers play/pause, <strong>skip
 forward/back</strong> (configurable intervals), <strong>rewind‑on‑resume</strong>, chapter navigation for chaptered M4B
 files, <strong>earmarks</strong> (save a spot and jump back to it later — bookmarks for audio), and a <strong>sleep
 timer</strong> (timed or end‑of‑chapter). Audiobookshelf titles stream from your server with progress syncing
 both ways.</p><div class="shots"><figure class="portrait"><figcaption>Audiobook player</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Audio%20Player%20Light.webp?v=1783091668" alt="Audiobook player" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Audiobook player (dark)</figcaption><img loading="lazy" src="img/Reader%20and%20Player/Audio%20Player%20Dark.webp?v=1783091668" alt="Audiobook player (dark)" onclick="zoom(this)"></figure><figure class="landscape"><figcaption>Skip interval</figcaption><img loading="lazy" src="img/Tools/Audio%20Player/Skip%20Time.webp?v=1783091668" alt="Skip interval" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Sleep timer</figcaption><img loading="lazy" src="img/Tools/Sleep%20Timer.webp?v=1783091668" alt="Sleep timer" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Save an earmark</figcaption><img loading="lazy" src="img/Tools/Save%20Earmark.webp?v=1783091668" alt="Save an earmark" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Jump to an earmark</figcaption><img loading="lazy" src="img/Tools/Jump%20to%20Earmark.webp?v=1783091668" alt="Jump to an earmark" onclick="zoom(this)"></figure></div><h3>Text‑to‑speech</h3>
 <p>Any ebook can be read aloud with the device's text‑to‑speech, with adjustable speech rate — handy for
-hands‑free or eyes‑free reading.</p><div class="shots"><figure class="landscape"><figcaption>Text-to-speech</figcaption><img loading="lazy" src="img/Tools/TTS_1.webp?v=1783091668" alt="Text-to-speech" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>TTS controls</figcaption><img loading="lazy" src="img/Tools/TTS_2.webp?v=1783091668" alt="TTS controls" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Read aloud</figcaption><img loading="lazy" src="img/Tools/TTS_3.webp?v=1783091668" alt="Read aloud" onclick="zoom(this)"></figure></div></section><section id="s9"><h2>9. The Library</h2><p>The library is your home screen — every book and audiobook you've added, organized the way you like.</p>
+hands‑free or eyes‑free reading.</p><div class="shots"><figure class="landscape"><figcaption>Text-to-speech</figcaption><img loading="lazy" src="img/Tools/TTS_1.webp?v=1783091668" alt="Text-to-speech" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>TTS controls</figcaption><img loading="lazy" src="img/Tools/TTS_2.webp?v=1783091668" alt="TTS controls" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Read aloud</figcaption><img loading="lazy" src="img/Tools/TTS_3.webp?v=1783091668" alt="Read aloud" onclick="zoom(this)"></figure></div></section><section id="s9"><h2>9. The Library</h2><p>The library is your home screen — every book and audiobook you've added, organized the way you like.
+It's the first thing you see when you open the app: your whole collection at a glance, arranged however
+makes sense to you. No "recommended for you", no ads for books you didn't ask about — just your shelf,
+the way you left it.</p>
 <h3>Read vs. Listen</h3>
 <p>A toggle at the top of the navigation drawer switches the whole library between <strong>Read</strong> (ebooks,
 PDFs, comics) and <strong>Listen</strong> (audiobooks). Each mode has its own shelves and its own continue‑reading
-row, so your reading and listening stay cleanly separated.</p><div class="shots"><figure class="portrait"><figcaption>Drawer — Read mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Read.webp?v=1783091668" alt="Drawer — Read mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Drawer — Listen mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Listen.webp?v=1783091668" alt="Drawer — Listen mode" onclick="zoom(this)"></figure></div><h3>Views, search, and sort</h3>
+row, so your reading and listening stay cleanly separated.</p><div class="shots"><figure class="portrait"><figcaption>Read · light mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Read.webp?v=1783091668" alt="Read · light mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Listen · light mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Listen.webp?v=1783091668" alt="Listen · light mode" onclick="zoom(this)"></figure></div><h3>Views, search, and sort</h3>
 <ul>
 <li><strong>Grid or list.</strong> A size slider lets you go from a dense list to large cover tiles and everything in
   between; the choice is remembered per device.</li>
@@ -257,7 +287,7 @@ gated behind device biometrics/credentials. <em>(Pro.)</em></p><div class="shots
 <li>A footer that sits on the grass strip with three evenly‑spaced actions: <strong>Insights · Vocabulary ·
   Settings</strong>.</li>
 </ul>
-<p>The drawer background is a living scene to give the app its identity and to give the user a "zen" experience. It animates only while the drawer is open to save battery. It follows day and night, and you can also set the app theme to taste.</p><div class="shots"><figure class="portrait"><figcaption>Drawer — Read mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Read.webp?v=1783091668" alt="Drawer — Read mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Drawer at night</figcaption><img loading="lazy" src="img/Drawer/Night%20Read.webp?v=1783091668" alt="Drawer at night" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Alternate scene</figcaption><img loading="lazy" src="img/Drawer/Light%20Read%20Swapped.webp?v=1783091668" alt="Alternate scene" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Alternate scene at night</figcaption><img loading="lazy" src="img/Drawer/Night%20Read%20Swapped.webp?v=1783091668" alt="Alternate scene at night" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Drawer — Listen mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Listen.webp?v=1783091668" alt="Drawer — Listen mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Listen mode at night</figcaption><img loading="lazy" src="img/Drawer/Night%20Listen.webp?v=1783091668" alt="Listen mode at night" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>App theme</figcaption><img loading="lazy" src="img/Drawer/App%20theme%20Settings.webp?v=1783091668" alt="App theme" onclick="zoom(this)"></figure></div></section><section id="s11"><h2>11. Getting books in</h2><ul>
+<p>The drawer background is a living scene that gives the app its identity and a "zen" feel. It animates only while the drawer is open to save battery, and the scene reflects your <strong>light/dark theme</strong> — sunny or dawn in light mode, rain or twilight in dark mode. You can set the app theme to taste.</p><div class="shots"><figure class="portrait"><figcaption>Read · light mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Read.webp?v=1783091668" alt="Read · light mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Read · dark mode</figcaption><img loading="lazy" src="img/Drawer/Night%20Read.webp?v=1783091668" alt="Read · dark mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Light mode — alternate scene</figcaption><img loading="lazy" src="img/Drawer/Light%20Read%20Swapped.webp?v=1783091668" alt="Light mode — alternate scene" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Dark mode — alternate scene</figcaption><img loading="lazy" src="img/Drawer/Night%20Read%20Swapped.webp?v=1783091668" alt="Dark mode — alternate scene" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Listen · light mode</figcaption><img loading="lazy" src="img/Drawer/Light%20Listen.webp?v=1783091668" alt="Listen · light mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>Listen · dark mode</figcaption><img loading="lazy" src="img/Drawer/Night%20Listen.webp?v=1783091668" alt="Listen · dark mode" onclick="zoom(this)"></figure><figure class="portrait"><figcaption>App theme</figcaption><img loading="lazy" src="img/Drawer/App%20theme%20Settings.webp?v=1783091668" alt="App theme" onclick="zoom(this)"></figure></div></section><section id="s11"><h2>11. Getting books in</h2><ul>
 <li><strong>Import files</strong> — bring in EPUB/PDF/MOBI/etc. from device storage.</li>
 <li><strong>Calibre</strong> — connect to a Calibre Content Server and browse/import over OPDS. Multi‑library
   servers show a library picker so you import from the right one.</li>
@@ -308,7 +338,7 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
 <td>Custom online dictionary URLs</td>
 </tr>
 <tr>
-<td>Word lookup, saved words, vocabulary</td>
+<td>Word lookup (in‑book definitions)</td>
 <td>External dictionary‑app selection</td>
 </tr>
 <tr>
@@ -321,7 +351,7 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
 </tr>
 <tr>
 <td>Insights, streaks, goals</td>
-<td></td>
+<td>Saved words &amp; vocabulary</td>
 </tr>
 <tr>
 <td>On‑device AI (after model download)</td>
@@ -347,8 +377,16 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
 <li>Moving to a new phone? <strong>Export a backup</strong>, install Garden Reads, add your books, and <strong>Import</strong> —
   highlights re‑attach to their books automatically.</li>
 </ul></section>
+<section class="closing">
+  <h2>Come read in the garden 🌱</h2>
+  <p>That's pretty much the whole thing. It's free to start — bring your own books, or grab a few free classics to get going. No account, no catch, and nothing leaves your phone. Hope you like it in here.</p>
+  <a class="cta" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play"><img src="img/google-play-badge.svg" alt="Get it on Google Play"></a>
+</section>
+<section class="thanks">
+  <p>Thanks to the people who each helped bring this to life in their own way — <strong>Narcis, Rogo, Grasu, Darko, Alina, Gabi, Dad and Mom</strong>. Without some of them, it simply wouldn't exist.</p>
+</section>
 </main>
-<footer><a class="cta" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play"><img src="img/google-play-badge.svg" alt="Get it on Google Play"></a><div style="margin-top:18px">Garden Reads — read deeply, privately, and at your own pace. 🌱</div></footer>
+<footer>Garden Reads — read deeply, privately, and at your own pace. 🌱</footer>
 <div id="lb" onclick="this.style.display='none'"><img alt=""></div>
 <script>
   function zoom(el){ var lb=document.getElementById('lb'); lb.querySelector('img').src=el.src; lb.style.display='flex'; }
