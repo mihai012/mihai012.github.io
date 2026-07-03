@@ -83,7 +83,7 @@
   <p>A calm, private, offline‑first reading companion with local AI for your whole library.</p>
   <a class="cta" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play"><img src="img/google-play-badge.svg" alt="Get it on Google Play"></a>
 </header>
-<details class="toc" id="toc">
+<details class="toc" id="toc" open>
   <summary>Jump to a section</summary>
   <nav><a href="#s1">What Garden Reads is</a><a href="#s2">AI Learning Mode (Ask Gemma)</a><a href="#s3">The Reader</a><a href="#s4">Themes &amp; reading comfort</a><a href="#s5">Selecting text: highlights, notes &amp; more</a><a href="#s6">Dictionary &amp; translation</a><a href="#s7">Vocabulary</a><a href="#s8">Listening: audiobooks &amp; text‑to‑speech</a><a href="#s9">The Library</a><a href="#s10">The navigation drawer</a><a href="#s11">Getting books in</a><a href="#s12">Insights &amp; reading stats</a><a href="#s13">Cloud sync &amp; backup</a><a href="#s14">Haptics &amp; feel</a><a href="#s15">What&#x27;s free vs. Pro</a><a href="#s16">Privacy &amp; offline summary</a><a href="#s17">Quick tips</a></nav>
 </details>
@@ -402,8 +402,12 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
 <script>
   function zoom(el){ var lb=document.getElementById('lb'); lb.querySelector('img').src=el.src; lb.style.display='flex'; }
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') document.getElementById('lb').style.display='none'; });
-  // Close the mobile "Jump to a section" dropdown after picking one.
-  document.querySelectorAll('.toc nav a').forEach(function(a){ a.addEventListener('click', function(){ document.getElementById('toc').removeAttribute('open'); }); });
+  // TOC: always-open chip bar on desktop; collapsible dropdown on phones (starts closed).
+  var _mq = matchMedia('(max-width:720px)');
+  function syncTOC(){ var t=document.getElementById('toc'); if(t){ if(_mq.matches) t.removeAttribute('open'); else t.setAttribute('open',''); } }
+  syncTOC();
+  _mq.addEventListener('change', syncTOC);
+  document.querySelectorAll('.toc nav a').forEach(function(a){ a.addEventListener('click', function(){ if(_mq.matches) document.getElementById('toc').removeAttribute('open'); }); });
 </script>
 </body>
 </html>
