@@ -22,9 +22,17 @@
   .cta:hover { transform:translateY(-2px); }
   .cta img { height:62px; width:auto; display:block; }
   footer .cta { margin-top:0; }
-  nav { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); padding:12px; display:flex; gap:9px; flex-wrap:wrap; justify-content:center; }
+  .toc { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); }
+  .toc > summary { display:block; cursor:pointer; list-style:none; padding:13px 16px; font-weight:600; font-size:.95rem; color:var(--accent); text-align:center; }
+  .toc > summary::-webkit-details-marker { display:none; }
+  .toc > summary::after { content:' ▾'; opacity:.7; }
+  .toc[open] > summary::after { content:' ▴'; }
+  .toc > nav { display:none; gap:9px; flex-wrap:wrap; justify-content:center; padding:12px; }
+  .toc[open] > nav { display:flex; }
+  /* Desktop: no dropdown — show the chip bar always, hide the toggle. */
+  @media (min-width:721px) { .toc > summary { display:none; } .toc > nav { display:flex; } }
   nav a { color:var(--accent); text-decoration:none; font-size:.9rem; font-weight:500; padding:7px 16px; background:var(--card); border:1px solid var(--line); border-radius:999px; box-shadow:0 2px 7px rgba(0,0,0,.18); transition:transform .12s, box-shadow .12s, background .12s, color .12s; }
-  nav a:hover { background:var(--accent); color:#fff; border-color:var(--accent); transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.30); }
+  nav a:hover { background:#3f6b24; color:#fff; border-color:#3f6b24; transform:translateY(-2px); box-shadow:0 7px 18px rgba(0,0,0,.30); }
   main { max-width:1240px; margin:0 auto; padding:8px 28px 90px; }
   section { padding-top:44px; }
   /* Keep prose at a readable measure even though the page is wide; galleries use the full width. */
@@ -50,10 +58,10 @@
   /* Phones: the 17-chip nav would wrap into ~10 rows and swallow the screen. Make it one
      horizontally-scrollable strip instead, and tighten the hero. */
   @media (max-width:720px) {
-    /* Wrapped, bigger chips that sit at the top and scroll away (non-sticky) — a pinned 17-chip
-       wrapped nav would swallow the phone screen. */
-    nav { position:static; flex-wrap:wrap; justify-content:center; gap:9px; padding:14px 12px; }
+    /* Sticky "Jump to a section" dropdown: compact pinned bar, expands to the full list on tap. */
     nav a { font-size:.95rem; padding:9px 16px; }
+    .toc[open] { box-shadow:0 10px 22px rgba(0,0,0,.28); }
+    .toc[open] > nav { max-height:64vh; overflow-y:auto; }
     main { padding:8px 16px 70px; }
     header.hero { padding:60px 18px 50px; }
     header.hero p { font-size:1rem; }
@@ -75,7 +83,10 @@
   <p>A calm, private, offline‑first reading companion with local AI for your whole library.</p>
   <a class="cta" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play"><img src="img/google-play-badge.svg" alt="Get it on Google Play"></a>
 </header>
-<nav><a href="#s1">What Garden Reads is</a><a href="#s2">AI Learning Mode (Ask Gemma)</a><a href="#s3">The Reader</a><a href="#s4">Themes &amp; reading comfort</a><a href="#s5">Selecting text: highlights, notes &amp; more</a><a href="#s6">Dictionary &amp; translation</a><a href="#s7">Vocabulary</a><a href="#s8">Listening: audiobooks &amp; text‑to‑speech</a><a href="#s9">The Library</a><a href="#s10">The navigation drawer</a><a href="#s11">Getting books in</a><a href="#s12">Insights &amp; reading stats</a><a href="#s13">Cloud sync &amp; backup</a><a href="#s14">Haptics &amp; feel</a><a href="#s15">What&#x27;s free vs. Pro</a><a href="#s16">Privacy &amp; offline summary</a><a href="#s17">Quick tips</a></nav>
+<details class="toc" id="toc">
+  <summary>Jump to a section</summary>
+  <nav><a href="#s1">What Garden Reads is</a><a href="#s2">AI Learning Mode (Ask Gemma)</a><a href="#s3">The Reader</a><a href="#s4">Themes &amp; reading comfort</a><a href="#s5">Selecting text: highlights, notes &amp; more</a><a href="#s6">Dictionary &amp; translation</a><a href="#s7">Vocabulary</a><a href="#s8">Listening: audiobooks &amp; text‑to‑speech</a><a href="#s9">The Library</a><a href="#s10">The navigation drawer</a><a href="#s11">Getting books in</a><a href="#s12">Insights &amp; reading stats</a><a href="#s13">Cloud sync &amp; backup</a><a href="#s14">Haptics &amp; feel</a><a href="#s15">What&#x27;s free vs. Pro</a><a href="#s16">Privacy &amp; offline summary</a><a href="#s17">Quick tips</a></nav>
+</details>
 <main>
 <section id="s1"><h2>1. What Garden Reads is</h2><p>Garden Reads is an Android app for reading and listening to your personal book collection. It opens
 the formats you already own, keeps everything <strong>on your device by default</strong>, and wraps the experience
@@ -383,7 +394,7 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
   <a class="cta" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play"><img src="img/google-play-badge.svg" alt="Get it on Google Play"></a>
 </section>
 <section class="thanks">
-  <p>Thanks to the people who each helped bring this to life in their own way — <strong>Alina, Gabi, Darko, my parents, Narcis, Grasu and Rogo</strong>. Without some of them, it simply wouldn't exist.</p>
+  <p>Thanks to the people who each helped bring this to life in their own way — <strong>Alina, Gabi, Darko, Dad, Mom, Narcis, Grasu and Rogo</strong>. Without some of them, it simply wouldn't exist.</p>
 </section>
 </main>
 <footer>Garden Reads — read deeply, privately, and at your own pace. 🌱</footer>
@@ -391,6 +402,8 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
 <script>
   function zoom(el){ var lb=document.getElementById('lb'); lb.querySelector('img').src=el.src; lb.style.display='flex'; }
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') document.getElementById('lb').style.display='none'; });
+  // Close the mobile "Jump to a section" dropdown after picking one.
+  document.querySelectorAll('.toc nav a').forEach(function(a){ a.addEventListener('click', function(){ document.getElementById('toc').removeAttribute('open'); }); });
 </script>
 </body>
 </html>
