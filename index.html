@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Garden Reads</title>
 <meta name="description" content="A calm, private, offline‑first reading companion with local AI for your whole library.">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
 <style>
   :root { --bg:#f4f1e7; --card:#fbf9f2; --ink:#2c2418; --muted:#6b6553; --accent:#4f7d2e; --line:#e2ddcd; }
   @media (prefers-color-scheme:dark) { :root { --bg:#14170f; --card:#1c2016; --ink:#eae7dc; --muted:#9a9a86; --accent:#8bbe5f; --line:#2a2f22; } }
@@ -17,6 +18,7 @@
   header.hero::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center, rgba(10,16,8,.45), rgba(10,16,8,.15) 60%, transparent 80%); }
   header.hero > * { position:relative; z-index:1; }
   header.hero h1 { font-family:Georgia,serif; font-size:clamp(2.4rem, 6.5vw, 5rem); margin:0 0 16px; color:#fff; text-shadow:0 2px 14px rgba(0,0,0,.45); }
+  header.hero h1 .wordmark { display:block; margin:0 auto; width:clamp(280px, 62vw, 640px); height:auto; filter:drop-shadow(0 3px 16px rgba(0,0,0,.5)); }
   header.hero p { color:rgba(255,255,255,.9); font-size:1.15rem; max-width:940px; margin:0 auto; font-style:italic; text-shadow:0 1px 10px rgba(0,0,0,.4); }
   .cta { display:inline-block; margin-top:26px; line-height:0; transition:transform .12s; }
   .cta:hover { transform:translateY(-2px); }
@@ -80,7 +82,7 @@
 </head>
 <body>
 <header class="hero">
-  <h1>Garden Reads</h1>
+  <h1><img class="wordmark" src="img/wordmark-white.svg" alt="Garden Reads"></h1>
   <p>A calm, private, offline‑first reading companion with local AI for your whole library.</p>
   <a class="cta" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play"><img src="img/google-play-badge.svg" alt="Get it on Google Play"></a>
 </header>
