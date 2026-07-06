@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Garden Reads — Read. Listen. Understand.</title>
+<meta name="description" content="A calm, private home for the books you already own — with a local AI that reads along, completely offline.">
+<link rel="icon" type="image/svg+xml" href="../mihai012.github.io/img/favicon.svg">
+<style>
+  /* ── Brand tokens (from the app's own design system) ─────────────────── */
+  :root{
+    --paper:#f4f1e7; --card:#fbf9f2; --ink:#2c2418; --muted:#6b6553;
+    --olive:#4f7d2e; --olive-ink:#3f6b24; --line:#e2ddcd; --forest:#1a2415;
+    --forest-2:#22301d; --on-forest:#f4f1e7;
+    --shadow:0 22px 50px -22px rgba(20,26,12,.55);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --maxw:1180px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#14170f; --card:#1c2016; --ink:#eae7dc; --muted:#9a9a86;
+      --olive:#8bbe5f; --olive-ink:#8bbe5f; --line:#2a2f22; --forest:#0f130b;
+      --forest-2:#161d10; --on-forest:#eae7dc;
+      --shadow:0 22px 50px -22px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#f4f1e7; --card:#fbf9f2; --ink:#2c2418; --muted:#6b6553;
+    --olive:#4f7d2e; --olive-ink:#3f6b24; --line:#e2ddcd; --forest:#1a2415;
+    --forest-2:#22301d; --on-forest:#f4f1e7; --shadow:0 22px 50px -22px rgba(20,26,12,.55);
+  }
+  :root[data-theme="dark"]{
+    --paper:#14170f; --card:#1c2016; --ink:#eae7dc; --muted:#9a9a86;
+    --olive:#8bbe5f; --olive-ink:#8bbe5f; --line:#2a2f22; --forest:#0f130b;
+    --forest-2:#161d10; --on-forest:#eae7dc; --shadow:0 22px 50px -22px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:17px; line-height:1.65;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{color:var(--olive-ink); text-underline-offset:3px;}
+  img{max-width:100%; display:block;}
+  ::selection{background:rgba(79,125,46,.24);}
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  .eyebrow{
+    font-size:.74rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--olive-ink); margin:0 0 14px;
+  }
+  h1,h2,h3{font-family:var(--serif); font-weight:600; text-wrap:balance; margin:0;}
+
+  /* ── Top bar (persistent CTA, calm register) ─────────────────────────── */
+  .topbar{
+    position:fixed; inset:0 0 auto 0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px; transition:background .35s ease, box-shadow .35s ease, padding .35s ease;
+  }
+  .topbar.solid{ background:color-mix(in srgb, var(--forest) 92%, transparent);
+    box-shadow:0 1px 0 rgba(255,255,255,.05), 0 12px 30px -18px rgba(0,0,0,.6);
+    backdrop-filter:blur(8px); padding:10px 28px; }
+  .topbar .mark{display:flex; align-items:center; gap:9px; opacity:0; transition:opacity .35s ease; pointer-events:none;}
+  .topbar.solid .mark{opacity:1; pointer-events:auto;}
+  .topbar .mark img{height:22px; width:auto;}
+  .topbar .right{display:flex; align-items:center; gap:10px; margin-left:auto;}
+  .btn{
+    font-family:var(--sans); font-weight:600; font-size:.9rem;
+    padding:9px 18px; border-radius:999px; border:0; cursor:pointer;
+    background:var(--olive); color:#fff; text-decoration:none; white-space:nowrap;
+    transition:transform .12s ease, filter .12s ease; box-shadow:0 6px 16px -6px rgba(79,125,46,.7);
+  }
+  .btn:hover{transform:translateY(-1px); filter:brightness(1.05);}
+  .btn:focus-visible, a:focus-visible, .theme-btn:focus-visible{outline:2px solid var(--olive); outline-offset:3px; border-radius:6px;}
+  .theme-btn{
+    width:38px; height:38px; border-radius:999px; border:1px solid rgba(255,255,255,.22);
+    background:rgba(255,255,255,.08); color:var(--on-forest); cursor:pointer; font-size:1rem; line-height:1;
+    display:grid; place-items:center; transition:background .2s ease;
+  }
+  .topbar.solid .theme-btn{border-color:rgba(255,255,255,.16);}
+  .theme-btn:hover{background:rgba(255,255,255,.16);}
+
+  /* ── Hero ─────────────────────────────────────────────────────────────── */
+  .hero{
+    position:relative; color:var(--on-forest); text-align:center;
+    padding:132px 20px 40px; overflow:hidden;
+    background:var(--forest-2) url("../mihai012.github.io/img/hero-bg.webp") center top/cover no-repeat;
+  }
+  .hero::after{content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(12,18,8,.32), rgba(12,18,8,.15) 40%, var(--paper) 99%);}
+  .hero > *{position:relative; z-index:1;}
+  .hero .wordmark{width:clamp(240px,52vw,470px); height:auto; margin:0 auto 22px;
+    filter:drop-shadow(0 3px 18px rgba(0,0,0,.55));}
+  .hero h1{
+    font-size:clamp(2.5rem,7vw,4.6rem); line-height:1.02; letter-spacing:-.01em;
+    color:#fff; text-shadow:0 2px 20px rgba(0,0,0,.4); margin:0 auto;
+  }
+  .hero h1 .dim{color:rgba(255,255,255,.62);}
+  .hero .sub{
+    max-width:640px; margin:20px auto 26px; font-size:clamp(1.02rem,2.3vw,1.22rem);
+    color:rgba(255,255,255,.9); text-shadow:0 1px 12px rgba(0,0,0,.4);
+  }
+  .badge img{height:56px; width:auto; margin:0 auto;}
+  .badge{display:inline-block; transition:transform .14s ease;}
+  .badge:hover{transform:translateY(-2px);}
+  .hero .note{margin:16px 0 0; font-size:.86rem; color:rgba(255,255,255,.72);}
+
+  /* Three-phone fan */
+  .fan{display:flex; justify-content:center; align-items:flex-end; gap:0; margin:54px auto 0; height:clamp(340px,44vw,430px);}
+  .fan .phone{margin:0 -26px;}
+  .fan .phone.side{width:clamp(150px,20vw,205px);}
+  .fan .phone.left{transform:rotate(-9deg) translateY(26px);}
+  .fan .phone.right{transform:rotate(9deg) translateY(26px);}
+  .fan .phone.center{width:clamp(180px,24vw,244px); z-index:2; position:relative;}
+
+  /* Device frame */
+  .phone{
+    background:#12140e; border-radius:2.1rem; padding:.42rem;
+    box-shadow:var(--shadow), 0 0 0 1px rgba(255,255,255,.04) inset;
+    width:clamp(210px,60vw,280px);
+  }
+  .phone img{border-radius:1.7rem; width:100%;}
+
+  /* ── Sections ─────────────────────────────────────────────────────────── */
+  .section{padding:clamp(64px,9vw,120px) 0;}
+  .thesis{text-align:center; max-width:760px; margin:0 auto; padding:clamp(70px,10vw,120px) 28px;}
+  .thesis h2{font-size:clamp(1.9rem,4.6vw,3rem); line-height:1.1; letter-spacing:-.01em;}
+  .thesis p{color:var(--muted); font-size:1.12rem; margin:18px auto 0; max-width:560px;}
+
+  .feature{display:grid; grid-template-columns:1fr 1fr; gap:clamp(32px,6vw,84px); align-items:center;}
+  .feature.reverse .copy{order:2;}
+  .feature .copy h2{font-size:clamp(1.7rem,3.6vw,2.5rem); line-height:1.12; letter-spacing:-.01em;}
+  .feature .copy p{color:var(--muted); font-size:1.06rem; margin:16px 0 0; max-width:440px;}
+  .feature .art{display:flex; justify-content:center;}
+  .feature .art.tilt .phone{transform:rotate(-3deg);}
+  .feature.reverse .art.tilt .phone{transform:rotate(3deg);}
+
+  .chips{list-style:none; padding:0; margin:22px 0 0; display:flex; flex-wrap:wrap; gap:9px;}
+  .chips li{
+    font-size:.84rem; font-weight:600; color:var(--olive-ink);
+    background:color-mix(in srgb, var(--olive) 12%, transparent);
+    border:1px solid color-mix(in srgb, var(--olive) 26%, transparent);
+    padding:6px 13px; border-radius:999px;
+  }
+
+  /* Principles band */
+  .band{background:var(--forest-2); color:var(--on-forest);}
+  .band .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(24px,4vw,56px);}
+  .band h3{font-size:1.28rem; color:#fff; margin-bottom:8px;}
+  .band p{color:rgba(255,255,255,.72); font-size:.98rem; margin:0;}
+  .band .leaf{font-size:1.5rem; margin-bottom:12px;}
+
+  /* Themes strip */
+  .themes h2{font-size:clamp(1.7rem,3.6vw,2.5rem); text-align:center; letter-spacing:-.01em;}
+  .themes .lead{text-align:center; color:var(--muted); margin:14px auto 0; max-width:520px;}
+  .strip{display:flex; gap:20px; overflow-x:auto; padding:40px 4px 14px; scroll-snap-type:x mandatory;}
+  .strip::-webkit-scrollbar{height:8px;}
+  .strip::-webkit-scrollbar-thumb{background:var(--line); border-radius:99px;}
+  .strip figure{margin:0; flex:0 0 auto; width:190px; scroll-snap-align:center; text-align:center;}
+  .strip .phone{width:190px;}
+  .strip figcaption{margin-top:12px; font-size:.82rem; font-weight:600; color:var(--muted); letter-spacing:.02em;}
+
+  /* Free vs Pro */
+  .plans{display:grid; grid-template-columns:1fr 1fr; gap:22px; max-width:820px; margin:0 auto;}
+  .plan{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:30px 28px;}
+  .plan.pro{border-color:color-mix(in srgb, var(--olive) 55%, var(--line)); box-shadow:0 14px 36px -20px rgba(79,125,46,.5);}
+  .plan .tag{font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);}
+  .plan.pro .tag{color:var(--olive-ink);}
+  .plan h3{font-size:1.5rem; margin:6px 0 2px;}
+  .plan .price{color:var(--muted); font-size:.94rem; margin:0 0 16px;}
+  .plan ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .plan li{position:relative; padding-left:26px; font-size:.98rem;}
+  .plan li::before{content:'🌿'; position:absolute; left:0; top:0; font-size:.9rem;}
+
+  /* Final CTA + footer */
+  .final{background:var(--forest-2); color:var(--on-forest); text-align:center; padding:clamp(70px,10vw,120px) 28px;}
+  .final h2{font-size:clamp(2rem,5vw,3.2rem); color:#fff; letter-spacing:-.01em;}
+  .final p{color:rgba(255,255,255,.75); margin:14px auto 26px; max-width:440px;}
+  footer{background:var(--forest); color:rgba(244,241,231,.62); text-align:center; padding:44px 28px; font-size:.84rem;}
+  footer img{height:20px; width:auto; margin:0 auto 16px; opacity:.9;}
+  footer a{color:rgba(244,241,231,.8);}
+  footer .links{display:flex; gap:22px; justify-content:center; margin:10px 0 16px; flex-wrap:wrap;}
+  footer .credit{opacity:.7; font-size:.8rem;}
+
+  /* Reveal on scroll */
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1; transform:none;}
+
+  @media (max-width:820px){
+    .feature{grid-template-columns:1fr; gap:34px;}
+    .feature.reverse .copy{order:0;}
+    .feature .copy{text-align:center;}
+    .feature .copy p, .chips{margin-left:auto; margin-right:auto;}
+    .chips{justify-content:center;}
+    .band .grid{grid-template-columns:1fr; gap:34px; text-align:center;}
+    .plans{grid-template-columns:1fr;}
+    .fan .phone.side{display:none;}
+    .fan .phone.center{width:clamp(210px,64vw,260px);}
+    .fan{margin-top:40px; height:auto;}
+    .topbar .btn{padding:8px 15px; font-size:.85rem;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none; transition:none;}
+    .fan .phone,.feature .art .phone{transform:none !important;}
+    .badge:hover,.btn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Persistent top bar -->
+<div class="topbar" id="topbar">
+  <a class="mark" href="#top" aria-label="Garden Reads home">
+    <img src="../mihai012.github.io/img/wordmark-white.svg" alt="Garden Reads">
+  </a>
+  <div class="right">
+    <button class="theme-btn" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle theme">◐</button>
+    <a class="btn" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener">Get the app</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<header class="hero" id="top">
+  <img class="wordmark" src="../mihai012.github.io/img/wordmark-white.svg" alt="Garden Reads">
+  <h1>Read. Listen. <span class="dim">Understand.</span></h1>
+  <p class="sub">A calm, private home for the books you already own — with a local AI that reads along, completely offline.</p>
+  <a class="badge" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play">
+    <img src="../mihai012.github.io/img/google-play-badge.svg" alt="Get it on Google Play">
+  </a>
+  <p class="note">No account · No tracking · No subscription</p>
+
+  <div class="fan">
+    <div class="phone side left"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="A clean reading page in Garden Reads"></div>
+    <div class="phone center"><img loading="lazy" src="../mihai012.github.io/img/AI/AI%20Chat.webp" alt="Asking the on-device AI about a passage"></div>
+    <div class="phone side right"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Audio%20Player%20Light.webp" alt="The built-in audiobook player"></div>
+  </div>
+</header>
+
+<!-- Thesis -->
+<section class="thesis reveal">
+  <p class="eyebrow">A different kind of reader</p>
+  <h2>A calm home for the books you already own.</h2>
+  <p>Most reading apps are storefronts first and readers second. Garden Reads is the opposite — no store, no account, nothing leaving your phone. Import your library once and it’s genuinely yours.</p>
+</section>
+
+<!-- Feature: Library -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature reverse reveal">
+      <div class="copy">
+        <p class="eyebrow">Your whole library</p>
+        <h2>Everything, side by side.</h2>
+        <p>EPUB, MOBI, PDF, TXT — plus comics and audiobooks — in one quiet place. Sort it, shelve it by genre or series, and keep private books behind a locked shelf.</p>
+        <ul class="chips">
+          <li>EPUB · PDF · CBZ · M4B</li>
+          <li>Custom shelves</li>
+          <li>Secure library</li>
+        </ul>
+      </div>
+      <div class="art tilt">
+        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Library/Light%204x4.webp" alt="The Garden Reads library grid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature: AI -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature reveal">
+      <div class="copy">
+        <p class="eyebrow">Local AI · Ask Gemma</p>
+        <h2>Ask anything. Nothing leaves your phone.</h2>
+        <p>Powered by Google’s Gemma, running entirely on-device via LiteRT. Select a word or a passage and ask — it answers in the context of your book, with no internet and no account.</p>
+        <ul class="chips">
+          <li>Deep Think</li>
+          <li>Spoiler-free mode</li>
+          <li>Speaks your book’s language</li>
+        </ul>
+      </div>
+      <div class="art tilt">
+        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/AI/AI%20Chat.webp" alt="Asking Garden Reads' local AI to explain a passage"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature: Reader -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature reverse reveal">
+      <div class="copy">
+        <p class="eyebrow">The reader</p>
+        <h2>A page you can make your own.</h2>
+        <p>Fonts, weight, spacing, margins, page-turn or scroll — dialed exactly how you like. A clean, distraction-free page that stays out of the way.</p>
+        <ul class="chips">
+          <li>Adjustable everything</li>
+          <li>Paginated or scroll</li>
+          <li>Realistic paper</li>
+        </ul>
+      </div>
+      <div class="art tilt">
+        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="A clean, distraction-free reading page"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Themes strip -->
+<section class="section themes reveal">
+  <div class="wrap">
+    <h2>Dress the page for your mood.</h2>
+    <p class="lead">Light, Sepia, true-black OLED, or the four seasons — each on its own realistic paper texture.</p>
+    <div class="strip">
+      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Sepia.webp" alt="Sepia reading theme"></div><figcaption>Sepia</figcaption></figure>
+      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Oled.webp" alt="OLED black reading theme"></div><figcaption>OLED black</figcaption></figure>
+      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Spring.webp" alt="Spring seasonal theme"></div><figcaption>Spring</figcaption></figure>
+      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Summer.webp" alt="Summer seasonal theme"></div><figcaption>Summer</figcaption></figure>
+      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Kraft%20paper.webp" alt="Kraft paper theme"></div><figcaption>Kraft paper</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- Feature: Listen -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature reveal">
+      <div class="copy">
+        <p class="eyebrow">Listen</p>
+        <h2>Switch to audio anytime.</h2>
+        <p>A full audiobook player — chapters, adjustable speed, bookmarks, sleep timer — plus text-to-speech for any ebook. Read a little, listen a little, pick up right where you left off.</p>
+        <ul class="chips">
+          <li>Audiobooks (M4B · MP3)</li>
+          <li>Text-to-speech</li>
+          <li>Sleep timer</li>
+        </ul>
+      </div>
+      <div class="art tilt">
+        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Audio%20Player%20Dark.webp" alt="The audiobook player playing a title"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature: Understand -->
+<section class="section">
+  <div class="wrap">
+    <div class="feature reverse reveal">
+      <div class="copy">
+        <p class="eyebrow">Understand</p>
+        <h2>Look it up. Save it. Share it.</h2>
+        <p>Tap any word for the offline dictionary, keep it in your vocabulary list, or turn a highlight into a quote card worth sharing.</p>
+        <ul class="chips">
+          <li>Offline dictionary</li>
+          <li>Vocabulary list</li>
+          <li>Beautiful quote cards</li>
+        </ul>
+      </div>
+      <div class="art tilt">
+        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Tools/Dictionary%20Offline%20Pop-Up.webp" alt="The offline dictionary pop-up over a page"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Principles band -->
+<section class="section band reveal">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <div class="leaf">🪴</div>
+        <h3>You own your library</h3>
+        <p>Books live on your device — nothing is streamed from us. Optional sync uses <em>your</em> Google Drive, carrying only what you choose.</p>
+      </div>
+      <div>
+        <div class="leaf">🔒</div>
+        <h3>Private by design</h3>
+        <p>The AI runs entirely on-device — no cloud calls, ever. Dictionaries and reading data stay local unless you turn on sync.</p>
+      </div>
+      <div>
+        <div class="leaf">🌿</div>
+        <h3>Calm, not busy</h3>
+        <p>Soft theming, sensible defaults, and controls that stay out of the way while you read.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Free vs Pro -->
+<section class="section reveal">
+  <div class="wrap">
+    <div class="thesis" style="padding-top:0; padding-bottom:36px;">
+      <p class="eyebrow">Simple, honest pricing</p>
+      <h2>Buy once. Own it forever.</h2>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <span class="tag">Free</span>
+        <h3>Genuinely usable</h3>
+        <p class="price">No trial, no nagging</p>
+        <ul>
+          <li>Read, listen &amp; annotate</li>
+          <li>On-device AI &amp; offline dictionary</li>
+          <li>Your whole library, offline</li>
+        </ul>
+      </div>
+      <div class="plan pro">
+        <span class="tag">Garden Reads Pro</span>
+        <h3>One-time unlock</h3>
+        <p class="price">No subscription. Ever.</p>
+        <ul>
+          <li>Removes ads</li>
+          <li>Unlocks every Pro feature</li>
+          <li>All future updates included</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final reveal">
+  <h2>Come read in the garden.</h2>
+  <p>Free to start. Yours to keep. Completely offline.</p>
+  <a class="badge" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play">
+    <img src="../mihai012.github.io/img/google-play-badge.svg" alt="Get it on Google Play">
+  </a>
+</section>
+
+<footer>
+  <img src="../mihai012.github.io/img/wordmark-white.svg" alt="Garden Reads">
+  <div class="links">
+    <a href="../mihai012.github.io/privacy/">Privacy policy</a>
+    <a href="../mihai012.github.io/legal/">Legal notices</a>
+  </div>
+  <p class="credit">Read deeply, privately, and at your own pace. 🌱</p>
+</footer>
+
+<script>
+  // Theme toggle (persisted)
+  (function(){
+    var root=document.documentElement, btn=document.getElementById('themeBtn');
+    var saved=localStorage.getItem('gr-theme');
+    if(saved){root.setAttribute('data-theme',saved);}
+    btn.addEventListener('click',function(){
+      var cur=root.getAttribute('data-theme');
+      if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+      var next=cur==='dark'?'light':'dark';
+      root.setAttribute('data-theme',next);
+      localStorage.setItem('gr-theme',next);
+    });
+  })();
+
+  // Top bar solidifies past the hero
+  (function(){
+    var bar=document.getElementById('topbar');
+    var onScroll=function(){ bar.classList.toggle('solid', window.scrollY>60); };
+    onScroll(); addEventListener('scroll',onScroll,{passive:true});
+  })();
+
+  // Scroll reveals
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver'in window)){els.forEach(function(e){e.classList.add('in');});return;}
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){en.target.classList.add('in'); io.unobserve(en.target);} });
+    },{rootMargin:'0px 0px -12% 0px', threshold:.12});
+    els.forEach(function(e){io.observe(e);});
+  })();
+</script>
+</body>
+</html>
