@@ -33,13 +33,20 @@
   .topbar.solid{background:color-mix(in srgb,var(--forest) 92%,transparent);box-shadow:0 12px 30px -18px rgba(0,0,0,.6);backdrop-filter:blur(8px);padding:9px 24px;}
   .topbar .mark{display:flex;align-items:center;gap:8px;opacity:0;transition:opacity .35s;pointer-events:none;}
   .topbar.solid .mark{opacity:1;pointer-events:auto;}
-  .topbar .mark img{height:20px;}
+  .topbar .mark img{height:30px;}
   .topbar .right{margin-left:auto;display:flex;align-items:center;gap:10px;}
   .btn{font-family:var(--sans);font-weight:600;font-size:.9rem;padding:9px 18px;border-radius:999px;border:0;cursor:pointer;background:var(--olive);color:#fff;text-decoration:none;white-space:nowrap;transition:transform .12s,filter .12s;box-shadow:0 6px 16px -6px rgba(79,125,46,.7);}
   .btn:hover{transform:translateY(-1px);filter:brightness(1.05);}
   .theme-btn{width:38px;height:38px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:var(--on-forest);cursor:pointer;font-size:1rem;display:grid;place-items:center;}
   a:focus-visible,.btn:focus-visible,.theme-btn:focus-visible{outline:2px solid var(--olive);outline-offset:3px;border-radius:6px;}
-  .ghead{position:relative;text-align:center;color:var(--on-forest);padding:118px 20px 52px;background:radial-gradient(120% 100% at 50% 0,var(--forest-2),var(--forest));}
+  .lang{position:relative;display:flex;}
+  .lang-btn{width:auto;min-width:38px;padding:0 11px;font-size:.8rem;font-weight:700;letter-spacing:.03em;}
+  .lang-menu{position:absolute;top:calc(100% + 10px);right:0;min-width:160px;list-style:none;margin:0;padding:6px;background:color-mix(in srgb,var(--forest) 94%,#000);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:14px;box-shadow:0 20px 44px -18px rgba(0,0,0,.75);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;}
+  .lang-menu.open{opacity:1;transform:none;pointer-events:auto;}
+  .lang-menu button{width:100%;text-align:left;background:transparent;border:0;cursor:pointer;color:var(--on-forest);font-family:var(--sans);font-size:.92rem;padding:9px 12px;border-radius:9px;transition:background .15s;}
+  .lang-menu button:hover{background:rgba(255,255,255,.1);}
+  .lang-menu button[aria-current="true"]{background:rgba(139,190,95,.24);color:#fff;font-weight:600;}
+  .ghead{position:relative;text-align:center;color:var(--on-forest);padding:118px 20px 52px;background:linear-gradient(180deg,rgba(12,18,8,.5),rgba(12,18,8,.32)),#1a2414 url("../img/hero-alt.webp") center/cover no-repeat;}
   .ghead .wordmark{width:clamp(220px,42vw,400px);height:auto;margin:0 auto 18px;filter:drop-shadow(0 3px 16px rgba(0,0,0,.5));}
   .ghead .eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin:0 0 10px;}
   .ghead h1{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,5vw,3.1rem);margin:0 0 14px;color:#fff;}
@@ -104,6 +111,17 @@
 <div class="topbar" id="topbar">
   <a class="mark" href="#top" aria-label="Garden Reads"><img src="../img/wordmark-white.svg" alt="Garden Reads"></a>
   <div class="right">
+    <div class="lang" id="lang">
+      <button class="theme-btn lang-btn" id="langBtn" aria-label="Change language" aria-haspopup="true" aria-expanded="false">EN</button>
+      <ul class="lang-menu" id="langMenu" role="menu" aria-label="Language">
+        <li><button role="menuitem" data-lang="en">English</button></li>
+        <li><button role="menuitem" data-lang="fr">Français</button></li>
+        <li><button role="menuitem" data-lang="de">Deutsch</button></li>
+        <li><button role="menuitem" data-lang="pt">Português</button></li>
+        <li><button role="menuitem" data-lang="ro">Română</button></li>
+        <li><button role="menuitem" data-lang="es">Español</button></li>
+      </ul>
+    </div>
     <button class="theme-btn" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle theme">&#9680;</button>
     <a class="btn" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener">Get the app</a>
   </div>
@@ -445,6 +463,7 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
   <p style="margin-top:8px;"><a href="../privacy/">Privacy policy</a> &nbsp;&middot;&nbsp; <a href="../legal/">Legal notices</a></p>
 </footer>
 <div id="lb" onclick="this.classList.remove('open')"><img alt=""></div>
+<script src="guide-i18n.js"></script>
 <script>
   function zoom(el){ var lb=document.getElementById('lb'); lb.querySelector('img').src=el.currentSrc||el.src; lb.classList.add('open'); }
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') document.getElementById('lb').classList.remove('open'); });
@@ -454,6 +473,55 @@ taste; the choices sync with your other settings.</p><div class="shots"><figure 
   function syncTOC(){ var t=document.getElementById('toc'); if(t){ if(_mq.matches) t.removeAttribute('open'); else t.setAttribute('open',''); } }
   syncTOC(); _mq.addEventListener('change',syncTOC);
   document.querySelectorAll('.toc nav a').forEach(function(a){ a.addEventListener('click',function(){ if(_mq.matches) document.getElementById('toc').removeAttribute('open'); }); });
+
+  // ── Localization (textContent-keyed; strings live in guide-i18n.js) ──────
+  (function(){
+    var DICT = window.GUIDE_I18N || {};
+    var TITLES = {
+      en:"Garden Reads — The Complete Guide",
+      fr:"Garden Reads — Le guide complet",
+      de:"Garden Reads — Die vollständige Anleitung",
+      pt:"Garden Reads — O guia completo",
+      ro:"Garden Reads — Ghidul complet",
+      es:"Garden Reads — La guía completa"
+    };
+    function norm(s){
+      return s.replace(/[‐‑‒–—]/g,'-')
+              .replace(/[‘’]/g,"'").replace(/[“”]/g,'"')
+              .replace(/…/g,'...').replace(/\s+/g,' ').trim();
+    }
+    var SEL='.topbar .btn, .ghead .eyebrow, .ghead h1, .ghead p, .ghead .back, .toc>summary, .toc nav a, main h2, main h3, main p, main li, main th, main td, main figcaption, footer p';
+    var UNITS=[];
+    document.querySelectorAll(SEL).forEach(function(el){
+      var key=norm(el.textContent||''); if(!key) return;
+      UNITS.push({el:el, key:key, en:el.innerHTML});
+    });
+    var CODE={en:'EN',fr:'FR',de:'DE',pt:'PT',ro:'RO',es:'ES'};
+    var root=document.documentElement,
+        wrap=document.getElementById('lang'),
+        btn=document.getElementById('langBtn'),
+        menu=document.getElementById('langMenu');
+    function pick(){
+      var s=localStorage.getItem('gr-lang'); if(s&&(s==='en'||DICT[s])) return s;
+      var prefs=navigator.languages||[navigator.language||'en'];
+      for(var i=0;i<prefs.length;i++){var n=(prefs[i]||'').slice(0,2).toLowerCase(); if(n==='en'||DICT[n]) return n;}
+      return 'en';
+    }
+    function apply(lang){
+      var d=(lang!=='en'&&DICT[lang])?DICT[lang]:null;
+      UNITS.forEach(function(u){ var t=d?d[u.key]:null; u.el.innerHTML=(t!=null)?t:u.en; });
+      if(TITLES[lang]) document.title=TITLES[lang];
+      root.setAttribute('lang',lang);
+      if(btn) btn.textContent=CODE[lang]||'EN';
+      if(menu) menu.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-current', b.getAttribute('data-lang')===lang?'true':'false'); });
+    }
+    function toggle(o){ if(!menu)return; menu.classList.toggle('open',o); if(btn)btn.setAttribute('aria-expanded',o?'true':'false'); }
+    if(btn){ btn.addEventListener('click',function(e){ e.stopPropagation(); toggle(!menu.classList.contains('open')); }); }
+    if(menu){ menu.querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){ var l=b.getAttribute('data-lang'); localStorage.setItem('gr-lang',l); apply(l); toggle(false); }); }); }
+    document.addEventListener('click',function(e){ if(wrap&&!wrap.contains(e.target)) toggle(false); });
+    addEventListener('keydown',function(e){ if(e.key==='Escape') toggle(false); });
+    apply(pick());
+  })();
 </script>
 </body>
 </html>

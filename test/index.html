@@ -9,8 +9,8 @@
 <style>
   /* ── Brand tokens (from the app's own design system) ─────────────────── */
   :root{
-    --paper:#a5c98f; --card:#edf3e4; --ink:#22301b; --muted:#46543a;
-    --olive:#3f6b24; --olive-ink:#2f5119; --line:#8bb277; --forest:#1a2415;
+    --paper:#f4f1e7; --card:#fbf9f2; --ink:#2c2418; --muted:#6b6553;
+    --olive:#4f7d2e; --olive-ink:#3f6b24; --line:#e2ddcd; --forest:#1a2415;
     --forest-2:#22301d; --on-forest:#f4f1e7;
     --shadow:0 22px 50px -22px rgba(20,26,12,.55);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
@@ -26,8 +26,8 @@
     }
   }
   :root[data-theme="light"]{
-    --paper:#a5c98f; --card:#edf3e4; --ink:#22301b; --muted:#46543a;
-    --olive:#3f6b24; --olive-ink:#2f5119; --line:#8bb277; --forest:#1a2415;
+    --paper:#f4f1e7; --card:#fbf9f2; --ink:#2c2418; --muted:#6b6553;
+    --olive:#4f7d2e; --olive-ink:#3f6b24; --line:#e2ddcd; --forest:#1a2415;
     --forest-2:#22301d; --on-forest:#f4f1e7; --shadow:0 22px 50px -22px rgba(20,26,12,.55);
   }
   :root[data-theme="dark"]{
@@ -86,14 +86,35 @@
   .topbar.solid .theme-btn{border-color:rgba(255,255,255,.16);}
   .theme-btn:hover{background:rgba(255,255,255,.16);}
 
+  /* Language picker */
+  .lang{position:relative; display:flex;}
+  .lang-btn{width:auto; min-width:38px; padding:0 11px; font-size:.8rem; font-weight:700; letter-spacing:.03em;}
+  .lang-menu{
+    position:absolute; top:calc(100% + 10px); right:0; min-width:160px;
+    list-style:none; margin:0; padding:6px;
+    background:color-mix(in srgb, var(--forest) 94%, #000); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.14); border-radius:14px;
+    box-shadow:0 20px 44px -18px rgba(0,0,0,.75);
+    opacity:0; transform:translateY(-6px); pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease; z-index:60;
+  }
+  .lang-menu.open{opacity:1; transform:none; pointer-events:auto;}
+  .lang-menu button{
+    width:100%; text-align:left; background:transparent; border:0; cursor:pointer;
+    color:var(--on-forest); font-family:var(--sans); font-size:.92rem;
+    padding:9px 12px; border-radius:9px; transition:background .15s ease;
+  }
+  .lang-menu button:hover{background:rgba(255,255,255,.1);}
+  .lang-menu button[aria-current="true"]{background:rgba(139,190,95,.24); color:#fff; font-weight:600;}
+
   /* ── Hero ─────────────────────────────────────────────────────────────── */
   .hero{
     position:relative; color:var(--on-forest); text-align:center;
-    padding:132px 20px 40px; overflow:hidden;
-    background:var(--forest-2) url("../img/hero-bg.webp") center top/cover no-repeat;
+    padding:132px 20px 36px;
+    background:#1a2414 url("../img/hero-alt.webp") center/cover no-repeat;
   }
   .hero::after{content:''; position:absolute; inset:0;
-    background:linear-gradient(180deg, rgba(12,18,8,.32), rgba(12,18,8,.15) 40%, var(--paper) 99%);}
+    background:linear-gradient(180deg, rgba(12,18,8,.52), rgba(12,18,8,.28) 50%, rgba(12,18,8,.45));}
   .hero > *{position:relative; z-index:1;}
   .hero .wordmark{width:clamp(240px,52vw,470px); height:auto; margin:0 auto 22px;
     filter:drop-shadow(0 3px 18px rgba(0,0,0,.55));}
@@ -112,7 +133,7 @@
   .hero .note{margin:16px 0 0; font-size:.86rem; color:rgba(255,255,255,.72);}
 
   /* Three-phone fan — hover any phone to straighten it and bring it to the front */
-  .fan{display:flex; justify-content:center; align-items:flex-end; gap:0; margin:48px auto 0;}
+  .fan{display:flex; justify-content:center; align-items:flex-end; gap:0; margin:14px auto 0;}
   .fan .phone{margin:0 -26px; position:relative; z-index:1; cursor:pointer; will-change:transform;
     transition:transform .34s cubic-bezier(.2,.7,.2,1), filter .34s ease;}
   .fan .phone img{transition:filter .34s ease;}
@@ -242,9 +263,10 @@
     .chips{justify-content:center;}
     .band .grid{grid-template-columns:1fr; gap:34px; text-align:center;}
     .plans{grid-template-columns:1fr;}
-    .fan .phone.side{display:none;}
-    .fan .phone.center{width:clamp(210px,64vw,260px);}
-    .fan{margin-top:40px; height:auto;}
+    .fan .phone.side{width:clamp(74px,23vw,116px);}
+    .fan .phone.center{width:clamp(90px,27vw,136px);}
+    .fan .phone{margin:0 -12px;}
+    .fan{margin-top:40px;}
     .topbar .btn{padding:8px 15px; font-size:.85rem;}
   }
   @media (prefers-reduced-motion:reduce){
@@ -263,34 +285,45 @@
     <img src="../img/wordmark-white.svg" alt="Garden Reads">
   </a>
   <div class="right">
+    <div class="lang" id="lang">
+      <button class="theme-btn lang-btn" id="langBtn" aria-label="Change language" aria-haspopup="true" aria-expanded="false">EN</button>
+      <ul class="lang-menu" id="langMenu" role="menu" aria-label="Language">
+        <li><button role="menuitem" data-lang="en">English</button></li>
+        <li><button role="menuitem" data-lang="fr">Français</button></li>
+        <li><button role="menuitem" data-lang="de">Deutsch</button></li>
+        <li><button role="menuitem" data-lang="pt">Português</button></li>
+        <li><button role="menuitem" data-lang="ro">Română</button></li>
+        <li><button role="menuitem" data-lang="es">Español</button></li>
+      </ul>
+    </div>
     <button class="theme-btn" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle theme">◐</button>
-    <a class="btn" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener">Get the app</a>
-    <a class="btn ghost" href="../guide/">Full app guide</a>
+    <a class="btn" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" data-i18n="nav.get">Get the app</a>
+    <a class="btn ghost" href="../guide/" data-i18n="nav.guide">Full app guide</a>
   </div>
 </div>
 
 <!-- Hero -->
 <header class="hero" id="top">
   <img class="wordmark" src="../img/wordmark-white.svg" alt="Garden Reads">
-  <h1>Read. Listen. <span class="dim">Understand.</span></h1>
-  <p class="sub">A calm, private home for the books you already own — with a local AI that reads along, completely offline.</p>
+  <h1 data-i18n-html="hero.h1">Read. Listen. <span class="dim">Understand.</span></h1>
+  <p class="sub" data-i18n="hero.sub">A calm, private home for the books you already own — with a local AI that reads along, completely offline.</p>
   <a class="badge" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play">
     <img src="../img/google-play-badge.svg" alt="Get it on Google Play">
   </a>
-  <p class="note">No account · No tracking · No subscription</p>
-
-  <div class="fan">
-    <div class="phone side left"><img loading="lazy" src="../img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="A clean reading page in Garden Reads"></div>
-    <div class="phone center"><img loading="lazy" src="../img/AI/AI%20Chat.webp" alt="Asking the on-device AI about a passage"></div>
-    <div class="phone side right"><img loading="lazy" src="../img/Reader%20and%20Player/Audio%20Player%20Light.webp" alt="The built-in audiobook player"></div>
-  </div>
+  <p class="note" data-i18n="hero.note">No account · No tracking · No subscription</p>
 </header>
+
+<div class="fan">
+  <div class="phone side left"><img loading="lazy" src="../img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="A clean reading page in Garden Reads"></div>
+  <div class="phone center"><img loading="lazy" src="../img/AI/AI%20Chat.webp" alt="Asking the on-device AI about a passage"></div>
+  <div class="phone side right"><img loading="lazy" src="../img/Reader%20and%20Player/Audio%20Player%20Light.webp" alt="The built-in audiobook player"></div>
+</div>
 
 <!-- Thesis -->
 <section class="thesis reveal">
-  <p class="eyebrow">A quiet place to read</p>
-  <h2>A calm home for the books you already own.</h2>
-  <p>Garden Reads asks for nothing in return — no store, no accounts, no data collection, and no subscription to stress about every month.</p>
+  <p class="eyebrow" data-i18n="th.eyebrow">A quiet place to read</p>
+  <h2 data-i18n="th.h2">A calm home for the books you already own.</h2>
+  <p data-i18n="th.p">Garden Reads asks for nothing in return — no store, no accounts, no data collection, and no subscription to stress about every month.</p>
 </section>
 
 <!-- Read -->
@@ -298,14 +331,14 @@
   <div class="wrap">
     <div class="feature reverse reveal">
       <div class="copy">
-        <p class="eyebrow">Read</p>
-        <h2>A page you can make your own.</h2>
-        <p>Garden Reads gives you every customization option you can think of — each one carefully crafted for a calm, immersive read.</p>
-        <p>And with Zen mode, the world goes quiet while you read — notifications, clock and battery hidden. Just you and the book.</p>
+        <p class="eyebrow" data-i18n="read.eyebrow">Read</p>
+        <h2 data-i18n="read.h2">A page you can make your own.</h2>
+        <p data-i18n="read.p1">Garden Reads gives you every customization option you can think of — each one carefully crafted for a calm, immersive read.</p>
+        <p data-i18n="read.p2">And with Zen mode, the world goes quiet while you read — notifications, clock and battery hidden. Just you and the book.</p>
         <ul class="chips">
-          <li>Adjustable everything</li>
-          <li>Zen mode</li>
-          <li>Paginated or scroll</li>
+          <li data-i18n="read.chip1">Adjustable everything</li>
+          <li data-i18n="read.chip2">Zen mode</li>
+          <li data-i18n="read.chip3">Paginated or scroll</li>
         </ul>
       </div>
       <div class="art">
@@ -324,13 +357,13 @@
   <div class="wrap">
     <div class="feature reveal">
       <div class="copy">
-        <p class="eyebrow">Listen</p>
-        <h2>Switch to audio anytime.</h2>
-        <p>A full audiobook player — chapters, adjustable speed, bookmarks, sleep timer. Connect your Audiobookshelf server to stream your library, with your progress synced everywhere.</p>
+        <p class="eyebrow" data-i18n="listen.eyebrow">Listen</p>
+        <h2 data-i18n="listen.h2">Switch to audio anytime.</h2>
+        <p data-i18n="listen.p">A full audiobook player — chapters, adjustable speed, bookmarks, sleep timer. Connect your Audiobookshelf server to stream your library, with your progress synced everywhere.</p>
         <ul class="chips">
           <li>Audiobookshelf</li>
-          <li>Audiobooks</li>
-          <li>Sleep timer</li>
+          <li data-i18n="listen.chip2">Audiobooks</li>
+          <li data-i18n="listen.chip3">Sleep timer</li>
         </ul>
       </div>
       <div class="art">
@@ -349,14 +382,14 @@
   <div class="wrap">
     <div class="feature reverse reveal">
       <div class="copy">
-        <p class="eyebrow">Understand</p>
-        <h2>Ask it anything. None of your thoughts leave the app.</h2>
-        <p>Powered by Google’s Gemma, running entirely on-device via LiteRT. Select a word or a passage and ask — it answers in the context of your book, with no internet and no account.</p>
-        <p>And paired with dictionaries, translations and annotations, nothing can stop you from getting the most out of your books.</p>
+        <p class="eyebrow" data-i18n="und.eyebrow">Understand</p>
+        <h2 data-i18n="und.h2">Ask it anything. None of your thoughts leave the app.</h2>
+        <p data-i18n="und.p1">Powered by Google’s Gemma, running entirely on-device via LiteRT. Select a word or a passage and ask — it answers in the context of your book, with no internet and no account.</p>
+        <p data-i18n="und.p2">And paired with dictionaries, translations and annotations, nothing can stop you from getting the most out of your books.</p>
         <ul class="chips">
-          <li>Annotations</li>
-          <li>Local AI</li>
-          <li>Dictionaries &amp; Translations</li>
+          <li data-i18n="und.chip1">Annotations</li>
+          <li data-i18n="und.chip2">Local AI</li>
+          <li data-i18n="und.chip3">Dictionaries &amp; Translations</li>
         </ul>
       </div>
       <div class="art">
@@ -376,18 +409,18 @@
     <div class="grid">
       <div>
         <div class="leaf">🪷</div>
-        <h3>Zen</h3>
-        <p>Soft theming, a living garden scene, and Zen mode — open a book and your whole phone goes quiet.</p>
+        <h3 data-i18n="band.zen.h">Zen</h3>
+        <p data-i18n="band.zen.p">Soft theming, a living garden scene, and Zen mode — open a book and your whole phone goes quiet.</p>
       </div>
       <div>
         <div class="leaf">🔒</div>
-        <h3>Private</h3>
-        <p>No account, no tracking, no data collection. The AI runs on-device, and nothing leaves your phone unless you turn on your own Drive sync.</p>
+        <h3 data-i18n="band.priv.h">Private</h3>
+        <p data-i18n="band.priv.p">No account, no tracking, no data collection. The AI runs on-device, and nothing leaves your phone unless you turn on your own Drive sync.</p>
       </div>
       <div>
         <div class="leaf">✨</div>
-        <h3>Powerful</h3>
-        <p>On-device AI, Dictionary, Translations, Annotations — every serious reading tool, without the clutter.</p>
+        <h3 data-i18n="band.pow.h">Powerful</h3>
+        <p data-i18n="band.pow.p">On-device AI, Dictionary, Translations, Annotations — every serious reading tool, without the clutter.</p>
       </div>
     </div>
   </div>
@@ -397,29 +430,29 @@
 <section class="section reveal">
   <div class="wrap">
     <div class="thesis" style="padding-top:0; padding-bottom:36px;">
-      <p class="eyebrow">Simple pricing</p>
-      <h2>Buy once. Own it forever.</h2>
-      <p>No other subscription to add to the pile.</p>
+      <p class="eyebrow" data-i18n="price.eyebrow">Simple pricing</p>
+      <h2 data-i18n="price.h2">Buy once. Own it forever.</h2>
+      <p data-i18n="price.p">No other subscription to add to the pile.</p>
     </div>
     <div class="plans">
       <div class="plan">
-        <span class="tag">Free</span>
-        <h3>Everything that matters, free</h3>
-        <p class="price">The powerful features cost nothing</p>
+        <span class="tag" data-i18n="free.tag">Free</span>
+        <h3 data-i18n="free.h3">Everything that matters, free</h3>
+        <p class="price" data-i18n="free.price">The powerful features cost nothing</p>
         <ul>
-          <li>On-device AI in every book</li>
-          <li>Zen mode, seasonal themes &amp; audiobooks</li>
-          <li>Highlights, notes, insights &amp; Drive sync</li>
+          <li data-i18n="free.li1">On-device AI in every book</li>
+          <li data-i18n="free.li2">Zen mode, seasonal themes &amp; audiobooks</li>
+          <li data-i18n="free.li3">Highlights, notes, insights &amp; Drive sync</li>
         </ul>
       </div>
       <div class="plan pro">
         <span class="tag">Garden Reads Pro</span>
-        <h3>Unlock everything</h3>
-        <p class="price">No subscription. Ever.</p>
+        <h3 data-i18n="pro.h3">Unlock everything</h3>
+        <p class="price" data-i18n="pro.price">No subscription. Ever.</p>
         <ul>
-          <li>Offline dictionaries &amp; saved vocabulary</li>
-          <li>Secure Library &amp; deeper customization</li>
-          <li>No ads — nothing to disturb the garden</li>
+          <li data-i18n="pro.li1">Offline dictionaries &amp; saved vocabulary</li>
+          <li data-i18n="pro.li2">Secure Library &amp; deeper customization</li>
+          <li data-i18n="pro.li3">No ads — nothing to disturb the garden</li>
         </ul>
       </div>
     </div>
@@ -428,23 +461,277 @@
 
 <!-- Closing — bookends the hero on the wordmark -->
 <section class="final reveal">
-  <h2>Start reading.</h2>
-  <p>Free, no account — browse free books directly in the app.</p>
+  <h2 data-i18n="final.h2">Start reading.</h2>
+  <p data-i18n="final.p">Free, no account — browse free books directly in the app.</p>
   <a class="badge" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play">
     <img src="../img/google-play-badge.svg" alt="Get it on Google Play">
   </a>
-  <p class="final-guide"><a href="../guide/">See the complete list of features in the full guide →</a></p>
+  <p class="final-guide"><a href="../guide/" data-i18n="final.guide">See the complete list of features in the full guide →</a></p>
   <footer class="final-foot">
     <div class="links">
-      <a href="../privacy/">Privacy policy</a>
-      <a href="../legal/">Legal notices</a>
+      <a href="../privacy/" data-i18n="foot.privacy">Privacy policy</a>
+      <a href="../legal/" data-i18n="foot.legal">Legal notices</a>
     </div>
   </footer>
 </section>
 
-<div id="lb" aria-hidden="true"><img id="lbimg" src="" alt=""><span class="hint">Click anywhere to close · Esc</span></div>
+<div id="lb" aria-hidden="true"><img id="lbimg" src="" alt=""><span class="hint" data-i18n="lb.hint">Click anywhere to close · Esc</span></div>
 
 <script>
+  // ── Localization (client-side, persisted) ────────────────────────────
+  (function(){
+    var I18N = {
+      en:{
+        "meta.title":"Garden Reads — Read. Listen. Understand.",
+        "nav.get":"Get the app","nav.guide":"Full app guide",
+        "hero.h1":"Read. Listen. <span class=\"dim\">Understand.</span>",
+        "hero.sub":"A calm, private home for the books you already own — with a local AI that reads along, completely offline.",
+        "hero.note":"No account · No tracking · No subscription",
+        "th.eyebrow":"A quiet place to read",
+        "th.h2":"A calm home for the books you already own.",
+        "th.p":"Garden Reads asks for nothing in return — no store, no accounts, no data collection, and no subscription to stress about every month.",
+        "read.eyebrow":"Read","read.h2":"A page you can make your own.",
+        "read.p1":"Garden Reads gives you every customization option you can think of — each one carefully crafted for a calm, immersive read.",
+        "read.p2":"And with Zen mode, the world goes quiet while you read — notifications, clock and battery hidden. Just you and the book.",
+        "read.chip1":"Adjustable everything","read.chip2":"Zen mode","read.chip3":"Paginated or scroll",
+        "listen.eyebrow":"Listen","listen.h2":"Switch to audio anytime.",
+        "listen.p":"A full audiobook player — chapters, adjustable speed, bookmarks, sleep timer. Connect your Audiobookshelf server to stream your library, with your progress synced everywhere.",
+        "listen.chip2":"Audiobooks","listen.chip3":"Sleep timer",
+        "und.eyebrow":"Understand","und.h2":"Ask it anything. None of your thoughts leave the app.",
+        "und.p1":"Powered by Google’s Gemma, running entirely on-device via LiteRT. Select a word or a passage and ask — it answers in the context of your book, with no internet and no account.",
+        "und.p2":"And paired with dictionaries, translations and annotations, nothing can stop you from getting the most out of your books.",
+        "und.chip1":"Annotations","und.chip2":"Local AI","und.chip3":"Dictionaries & Translations",
+        "band.zen.h":"Zen","band.zen.p":"Soft theming, a living garden scene, and Zen mode — open a book and your whole phone goes quiet.",
+        "band.priv.h":"Private","band.priv.p":"No account, no tracking, no data collection. The AI runs on-device, and nothing leaves your phone unless you turn on your own Drive sync.",
+        "band.pow.h":"Powerful","band.pow.p":"On-device AI, Dictionary, Translations, Annotations — every serious reading tool, without the clutter.",
+        "price.eyebrow":"Simple pricing","price.h2":"Buy once. Own it forever.","price.p":"No other subscription to add to the pile.",
+        "free.tag":"Free","free.h3":"Everything that matters, free","free.price":"The powerful features cost nothing",
+        "free.li1":"On-device AI in every book","free.li2":"Zen mode, seasonal themes & audiobooks","free.li3":"Highlights, notes, insights & Drive sync",
+        "pro.h3":"Unlock everything","pro.price":"No subscription. Ever.",
+        "pro.li1":"Offline dictionaries & saved vocabulary","pro.li2":"Secure Library & deeper customization","pro.li3":"No ads — nothing to disturb the garden",
+        "final.h2":"Start reading.","final.p":"Free, no account — browse free books directly in the app.",
+        "final.guide":"See the complete list of features in the full guide →",
+        "foot.privacy":"Privacy policy","foot.legal":"Legal notices",
+        "lb.hint":"Click anywhere to close · Esc"
+      },
+      fr:{
+        "meta.title":"Garden Reads — Lire. Écouter. Comprendre.",
+        "nav.get":"Obtenir l’app","nav.guide":"Guide complet",
+        "hero.h1":"Lisez. Écoutez. <span class=\"dim\">Comprenez.</span>",
+        "hero.sub":"Un espace calme et privé pour les livres que vous possédez déjà — avec une IA locale qui lit à vos côtés, entièrement hors ligne.",
+        "hero.note":"Sans compte · Sans traçage · Sans abonnement",
+        "th.eyebrow":"Un endroit calme pour lire",
+        "th.h2":"Un foyer paisible pour les livres que vous possédez déjà.",
+        "th.p":"Garden Reads ne demande rien en retour — pas de boutique, pas de compte, aucune collecte de données et aucun abonnement à gérer chaque mois.",
+        "read.eyebrow":"Lire","read.h2":"Une page que vous façonnez à votre goût.",
+        "read.p1":"Garden Reads vous offre toutes les options de personnalisation imaginables — chacune pensée pour une lecture calme et immersive.",
+        "read.p2":"Et avec le mode Zen, le monde se tait pendant votre lecture — notifications, horloge et batterie masquées. Juste vous et le livre.",
+        "read.chip1":"Tout est réglable","read.chip2":"Mode Zen","read.chip3":"Pages ou défilement",
+        "listen.eyebrow":"Écouter","listen.h2":"Passez à l’audio quand vous voulez.",
+        "listen.p":"Un lecteur de livres audio complet — chapitres, vitesse réglable, marque-pages, minuterie de veille. Connectez votre serveur Audiobookshelf pour diffuser votre bibliothèque, avec votre progression synchronisée partout.",
+        "listen.chip2":"Livres audio","listen.chip3":"Minuterie de veille",
+        "und.eyebrow":"Comprendre","und.h2":"Demandez-lui n’importe quoi. Aucune de vos pensées ne quitte l’app.",
+        "und.p1":"Propulsée par Gemma de Google, exécutée entièrement sur l’appareil via LiteRT. Sélectionnez un mot ou un passage et posez votre question — elle répond dans le contexte de votre livre, sans internet et sans compte.",
+        "und.p2":"Et associée aux dictionnaires, traductions et annotations, rien ne vous empêche de tirer le meilleur de vos livres.",
+        "und.chip1":"Annotations","und.chip2":"IA locale","und.chip3":"Dictionnaires et traductions",
+        "band.zen.h":"Zen","band.zen.p":"Des thèmes tout en douceur, un jardin vivant et le mode Zen — ouvrez un livre et tout votre téléphone se tait.",
+        "band.priv.h":"Privé","band.priv.p":"Pas de compte, pas de traçage, aucune collecte de données. L’IA fonctionne sur l’appareil, et rien ne quitte votre téléphone, sauf si vous activez votre propre synchronisation Drive.",
+        "band.pow.h":"Puissant","band.pow.p":"IA sur l’appareil, dictionnaire, traductions, annotations — tous les outils de lecture sérieux, sans le superflu.",
+        "price.eyebrow":"Tarif simple","price.h2":"Achetez une fois. À vous pour toujours.","price.p":"Pas un abonnement de plus à empiler.",
+        "free.tag":"Gratuit","free.h3":"L’essentiel, gratuitement","free.price":"Les fonctions puissantes ne coûtent rien",
+        "free.li1":"IA sur l’appareil dans chaque livre","free.li2":"Mode Zen, thèmes saisonniers et livres audio","free.li3":"Surlignages, notes, statistiques et sync Drive",
+        "pro.h3":"Débloquez tout","pro.price":"Aucun abonnement. Jamais.",
+        "pro.li1":"Dictionnaires hors ligne et vocabulaire enregistré","pro.li2":"Bibliothèque sécurisée et personnalisation avancée","pro.li3":"Sans publicité — rien ne trouble le jardin",
+        "final.h2":"Commencez à lire.","final.p":"Gratuit, sans compte — parcourez des livres gratuits directement dans l’app.",
+        "final.guide":"Voir la liste complète des fonctionnalités dans le guide complet →",
+        "foot.privacy":"Politique de confidentialité","foot.legal":"Mentions légales",
+        "lb.hint":"Cliquez n’importe où pour fermer · Échap"
+      },
+      de:{
+        "meta.title":"Garden Reads — Lesen. Hören. Verstehen.",
+        "nav.get":"App holen","nav.guide":"Komplette Anleitung",
+        "hero.h1":"Lesen. Hören. <span class=\"dim\">Verstehen.</span>",
+        "hero.sub":"Ein ruhiges, privates Zuhause für die Bücher, die Sie bereits besitzen — mit einer lokalen KI, die mitliest, völlig offline.",
+        "hero.note":"Kein Konto · Kein Tracking · Kein Abo",
+        "th.eyebrow":"Ein ruhiger Ort zum Lesen",
+        "th.h2":"Ein ruhiges Zuhause für die Bücher, die Sie bereits besitzen.",
+        "th.p":"Garden Reads verlangt nichts dafür — kein Store, keine Konten, keine Datensammlung und kein Abo, um das man sich jeden Monat sorgen muss.",
+        "read.eyebrow":"Lesen","read.h2":"Eine Seite, die ganz Ihre wird.",
+        "read.p1":"Garden Reads bietet Ihnen jede erdenkliche Anpassungsoption — jede sorgfältig für ein ruhiges, immersives Lesen gestaltet.",
+        "read.p2":"Und mit dem Zen-Modus wird die Welt beim Lesen still — Benachrichtigungen, Uhr und Akku ausgeblendet. Nur Sie und das Buch.",
+        "read.chip1":"Alles einstellbar","read.chip2":"Zen-Modus","read.chip3":"Seiten oder Scrollen",
+        "listen.eyebrow":"Hören","listen.h2":"Wechseln Sie jederzeit zum Hörbuch.",
+        "listen.p":"Ein vollwertiger Hörbuch-Player — Kapitel, einstellbare Geschwindigkeit, Lesezeichen, Sleeptimer. Verbinden Sie Ihren Audiobookshelf-Server, um Ihre Bibliothek zu streamen, mit überall synchronisiertem Fortschritt.",
+        "listen.chip2":"Hörbücher","listen.chip3":"Sleeptimer",
+        "und.eyebrow":"Verstehen","und.h2":"Fragen Sie sie alles. Keiner Ihrer Gedanken verlässt die App.",
+        "und.p1":"Angetrieben von Googles Gemma, vollständig auf dem Gerät über LiteRT. Markieren Sie ein Wort oder eine Passage und fragen Sie — sie antwortet im Kontext Ihres Buches, ohne Internet und ohne Konto.",
+        "und.p2":"Und kombiniert mit Wörterbüchern, Übersetzungen und Anmerkungen hält Sie nichts davon ab, das Beste aus Ihren Büchern zu holen.",
+        "und.chip1":"Anmerkungen","und.chip2":"Lokale KI","und.chip3":"Wörterbücher & Übersetzungen",
+        "band.zen.h":"Zen","band.zen.p":"Sanfte Themes, eine lebendige Gartenszene und der Zen-Modus — öffnen Sie ein Buch und Ihr ganzes Handy wird still.",
+        "band.priv.h":"Privat","band.priv.p":"Kein Konto, kein Tracking, keine Datensammlung. Die KI läuft auf dem Gerät, und nichts verlässt Ihr Handy, es sei denn, Sie aktivieren Ihre eigene Drive-Synchronisierung.",
+        "band.pow.h":"Leistungsstark","band.pow.p":"KI auf dem Gerät, Wörterbuch, Übersetzungen, Anmerkungen — jedes ernsthafte Lesewerkzeug, ohne Ballast.",
+        "price.eyebrow":"Einfacher Preis","price.h2":"Einmal kaufen. Für immer besitzen.","price.p":"Kein weiteres Abo, das sich stapelt.",
+        "free.tag":"Kostenlos","free.h3":"Alles Wesentliche, kostenlos","free.price":"Die starken Funktionen kosten nichts",
+        "free.li1":"KI auf dem Gerät in jedem Buch","free.li2":"Zen-Modus, saisonale Themes & Hörbücher","free.li3":"Markierungen, Notizen, Statistiken & Drive-Sync",
+        "pro.h3":"Alles freischalten","pro.price":"Kein Abo. Niemals.",
+        "pro.li1":"Offline-Wörterbücher & gespeicherter Wortschatz","pro.li2":"Sichere Bibliothek & tiefere Anpassung","pro.li3":"Keine Werbung — nichts stört den Garten",
+        "final.h2":"Fangen Sie an zu lesen.","final.p":"Kostenlos, ohne Konto — stöbern Sie direkt in der App durch kostenlose Bücher.",
+        "final.guide":"Die vollständige Funktionsliste in der kompletten Anleitung ansehen →",
+        "foot.privacy":"Datenschutz","foot.legal":"Rechtliche Hinweise",
+        "lb.hint":"Zum Schließen irgendwo klicken · Esc"
+      },
+      pt:{
+        "meta.title":"Garden Reads — Ler. Ouvir. Entender.",
+        "nav.get":"Baixar o app","nav.guide":"Guia completo",
+        "hero.h1":"Leia. Ouça. <span class=\"dim\">Entenda.</span>",
+        "hero.sub":"Um lar calmo e privado para os livros que você já tem — com uma IA local que lê junto com você, totalmente offline.",
+        "hero.note":"Sem conta · Sem rastreamento · Sem assinatura",
+        "th.eyebrow":"Um lugar tranquilo para ler",
+        "th.h2":"Um lar tranquilo para os livros que você já tem.",
+        "th.p":"O Garden Reads não pede nada em troca — sem loja, sem contas, sem coleta de dados e sem assinatura para se preocupar todo mês.",
+        "read.eyebrow":"Ler","read.h2":"Uma página que você deixa do seu jeito.",
+        "read.p1":"O Garden Reads oferece todas as opções de personalização que você imaginar — cada uma pensada para uma leitura calma e imersiva.",
+        "read.p2":"E com o modo Zen, o mundo silencia enquanto você lê — notificações, relógio e bateria ocultos. Só você e o livro.",
+        "read.chip1":"Tudo ajustável","read.chip2":"Modo Zen","read.chip3":"Páginas ou rolagem",
+        "listen.eyebrow":"Ouvir","listen.h2":"Mude para o áudio quando quiser.",
+        "listen.p":"Um player de audiolivros completo — capítulos, velocidade ajustável, marcadores, timer para dormir. Conecte seu servidor Audiobookshelf para transmitir sua biblioteca, com seu progresso sincronizado em todos os aparelhos.",
+        "listen.chip2":"Audiolivros","listen.chip3":"Timer para dormir",
+        "und.eyebrow":"Entender","und.h2":"Pergunte qualquer coisa. Nenhum dos seus pensamentos sai do app.",
+        "und.p1":"Com a tecnologia Gemma, do Google, rodando inteiramente no aparelho via LiteRT. Selecione uma palavra ou trecho e pergunte — ela responde no contexto do seu livro, sem internet e sem conta.",
+        "und.p2":"E combinada com dicionários, traduções e anotações, nada impede você de aproveitar seus livros ao máximo.",
+        "und.chip1":"Anotações","und.chip2":"IA local","und.chip3":"Dicionários e traduções",
+        "band.zen.h":"Zen","band.zen.p":"Temas suaves, um jardim vivo e o modo Zen — abra um livro e todo o seu celular silencia.",
+        "band.priv.h":"Privado","band.priv.p":"Sem conta, sem rastreamento, sem coleta de dados. A IA roda no aparelho, e nada sai do seu celular a menos que você ative sua própria sincronização com o Drive.",
+        "band.pow.h":"Poderoso","band.pow.p":"IA no aparelho, dicionário, traduções, anotações — todas as ferramentas sérias de leitura, sem a bagunça.",
+        "price.eyebrow":"Preço simples","price.h2":"Compre uma vez. É seu para sempre.","price.p":"Sem mais uma assinatura para acumular.",
+        "free.tag":"Grátis","free.h3":"Tudo o que importa, grátis","free.price":"Os recursos poderosos não custam nada",
+        "free.li1":"IA no aparelho em cada livro","free.li2":"Modo Zen, temas sazonais e audiolivros","free.li3":"Destaques, notas, estatísticas e sync com o Drive",
+        "pro.h3":"Desbloqueie tudo","pro.price":"Sem assinatura. Nunca.",
+        "pro.li1":"Dicionários offline e vocabulário salvo","pro.li2":"Biblioteca segura e personalização avançada","pro.li3":"Sem anúncios — nada perturba o jardim",
+        "final.h2":"Comece a ler.","final.p":"Grátis, sem conta — explore livros gratuitos direto no app.",
+        "final.guide":"Veja a lista completa de recursos no guia completo →",
+        "foot.privacy":"Política de privacidade","foot.legal":"Avisos legais",
+        "lb.hint":"Clique em qualquer lugar para fechar · Esc"
+      },
+      ro:{
+        "meta.title":"Garden Reads — Citește. Ascultă. Înțelege.",
+        "nav.get":"Descarcă aplicația","nav.guide":"Ghid complet",
+        "hero.h1":"Citește. Ascultă. <span class=\"dim\">Înțelege.</span>",
+        "hero.sub":"Un spațiu calm și privat pentru cărțile pe care le ai deja — cu o inteligență artificială locală care citește alături de tine, complet offline.",
+        "hero.note":"Fără cont · Fără urmărire · Fără abonament",
+        "th.eyebrow":"Un loc liniștit pentru citit",
+        "th.h2":"Un cămin liniștit pentru cărțile pe care le ai deja.",
+        "th.p":"Garden Reads nu cere nimic în schimb — fără magazin, fără conturi, fără colectare de date și fără abonament de care să-ți faci griji în fiecare lună.",
+        "read.eyebrow":"Citește","read.h2":"O pagină pe care o faci a ta.",
+        "read.p1":"Garden Reads îți oferă toate opțiunile de personalizare la care te poți gândi — fiecare gândită pentru o lectură calmă și imersivă.",
+        "read.p2":"Iar cu modul Zen, lumea se liniștește cât citești — notificări, ceas și baterie ascunse. Doar tu și cartea.",
+        "read.chip1":"Totul ajustabil","read.chip2":"Mod Zen","read.chip3":"Pagini sau derulare",
+        "listen.eyebrow":"Ascultă","listen.h2":"Treci la audio oricând.",
+        "listen.p":"Un player complet de audiobookuri — capitole, viteză reglabilă, semne de carte, cronometru de adormire. Conectează-ți serverul Audiobookshelf ca să-ți asculți biblioteca, cu progresul sincronizat peste tot.",
+        "listen.chip2":"Audiobookuri","listen.chip3":"Cronometru de adormire",
+        "und.eyebrow":"Înțelege","und.h2":"Întreab-o orice. Niciun gând al tău nu părăsește aplicația.",
+        "und.p1":"Bazată pe Gemma de la Google, rulând complet pe dispozitiv prin LiteRT. Selectează un cuvânt sau un pasaj și întreabă — răspunde în contextul cărții tale, fără internet și fără cont.",
+        "und.p2":"Iar împreună cu dicționare, traduceri și adnotări, nimic nu te oprește să profiți la maximum de cărțile tale.",
+        "und.chip1":"Adnotări","und.chip2":"IA locală","und.chip3":"Dicționare și traduceri",
+        "band.zen.h":"Zen","band.zen.p":"Teme blânde, o grădină vie și modul Zen — deschide o carte și tot telefonul se liniștește.",
+        "band.priv.h":"Privat","band.priv.p":"Fără cont, fără urmărire, fără colectare de date. IA rulează pe dispozitiv, iar nimic nu-ți părăsește telefonul decât dacă îți activezi propria sincronizare cu Drive.",
+        "band.pow.h":"Puternic","band.pow.p":"IA pe dispozitiv, dicționar, traduceri, adnotări — toate instrumentele serioase de lectură, fără dezordine.",
+        "price.eyebrow":"Preț simplu","price.h2":"Cumperi o dată. E al tău pentru totdeauna.","price.p":"Fără încă un abonament pe grămadă.",
+        "free.tag":"Gratuit","free.h3":"Tot ce contează, gratuit","free.price":"Funcțiile puternice nu costă nimic",
+        "free.li1":"IA pe dispozitiv în fiecare carte","free.li2":"Mod Zen, teme sezoniere și audiobookuri","free.li3":"Evidențieri, notițe, statistici și sync cu Drive",
+        "pro.h3":"Deblochează tot","pro.price":"Fără abonament. Niciodată.",
+        "pro.li1":"Dicționare offline și vocabular salvat","pro.li2":"Bibliotecă securizată și personalizare avansată","pro.li3":"Fără reclame — nimic nu tulbură grădina",
+        "final.h2":"Începe să citești.","final.p":"Gratuit, fără cont — răsfoiește cărți gratuite direct în aplicație.",
+        "final.guide":"Vezi lista completă de funcții în ghidul complet →",
+        "foot.privacy":"Politica de confidențialitate","foot.legal":"Mențiuni legale",
+        "lb.hint":"Dă clic oriunde pentru a închide · Esc"
+      },
+      es:{
+        "meta.title":"Garden Reads — Leer. Escuchar. Comprender.",
+        "nav.get":"Descargar la app","nav.guide":"Guía completa",
+        "hero.h1":"Lee. Escucha. <span class=\"dim\">Comprende.</span>",
+        "hero.sub":"Un hogar tranquilo y privado para los libros que ya tienes — con una IA local que lee contigo, totalmente sin conexión.",
+        "hero.note":"Sin cuenta · Sin rastreo · Sin suscripción",
+        "th.eyebrow":"Un lugar tranquilo para leer",
+        "th.h2":"Un hogar tranquilo para los libros que ya tienes.",
+        "th.p":"Garden Reads no pide nada a cambio — sin tienda, sin cuentas, sin recopilación de datos y sin suscripción de la que preocuparte cada mes.",
+        "read.eyebrow":"Leer","read.h2":"Una página que haces tuya.",
+        "read.p1":"Garden Reads te da todas las opciones de personalización que puedas imaginar — cada una pensada para una lectura tranquila e inmersiva.",
+        "read.p2":"Y con el modo Zen, el mundo se calla mientras lees — notificaciones, reloj y batería ocultos. Solo tú y el libro.",
+        "read.chip1":"Todo ajustable","read.chip2":"Modo Zen","read.chip3":"Páginas o desplazamiento",
+        "listen.eyebrow":"Escuchar","listen.h2":"Cambia al audio cuando quieras.",
+        "listen.p":"Un reproductor de audiolibros completo — capítulos, velocidad ajustable, marcadores, temporizador de apagado. Conecta tu servidor Audiobookshelf para transmitir tu biblioteca, con tu progreso sincronizado en todas partes.",
+        "listen.chip2":"Audiolibros","listen.chip3":"Temporizador de apagado",
+        "und.eyebrow":"Comprender","und.h2":"Pregúntale lo que quieras. Ninguno de tus pensamientos sale de la app.",
+        "und.p1":"Con la tecnología de Gemma, de Google, ejecutándose por completo en el dispositivo mediante LiteRT. Selecciona una palabra o un pasaje y pregunta — responde en el contexto de tu libro, sin internet y sin cuenta.",
+        "und.p2":"Y combinada con diccionarios, traducciones y anotaciones, nada te impide sacar el máximo partido a tus libros.",
+        "und.chip1":"Anotaciones","und.chip2":"IA local","und.chip3":"Diccionarios y traducciones",
+        "band.zen.h":"Zen","band.zen.p":"Temas suaves, un jardín vivo y el modo Zen — abre un libro y todo tu teléfono se calla.",
+        "band.priv.h":"Privado","band.priv.p":"Sin cuenta, sin rastreo, sin recopilación de datos. La IA se ejecuta en el dispositivo, y nada sale de tu teléfono a menos que actives tu propia sincronización con Drive.",
+        "band.pow.h":"Potente","band.pow.p":"IA en el dispositivo, diccionario, traducciones, anotaciones — todas las herramientas de lectura serias, sin lo superfluo.",
+        "price.eyebrow":"Precio simple","price.h2":"Compra una vez. Es tuyo para siempre.","price.p":"Ni una suscripción más que sumar a la pila.",
+        "free.tag":"Gratis","free.h3":"Todo lo que importa, gratis","free.price":"Las funciones potentes no cuestan nada",
+        "free.li1":"IA en el dispositivo en cada libro","free.li2":"Modo Zen, temas de temporada y audiolibros","free.li3":"Subrayados, notas, estadísticas y sync con Drive",
+        "pro.h3":"Desbloquéalo todo","pro.price":"Sin suscripción. Nunca.",
+        "pro.li1":"Diccionarios sin conexión y vocabulario guardado","pro.li2":"Biblioteca segura y personalización avanzada","pro.li3":"Sin anuncios — nada perturba el jardín",
+        "final.h2":"Empieza a leer.","final.p":"Gratis, sin cuenta — explora libros gratuitos directamente en la app.",
+        "final.guide":"Ver la lista completa de funciones en la guía completa →",
+        "foot.privacy":"Política de privacidad","foot.legal":"Avisos legales",
+        "lb.hint":"Haz clic en cualquier lugar para cerrar · Esc"
+      }
+    };
+    var CODE={en:"EN",fr:"FR",de:"DE",pt:"PT",ro:"RO",es:"ES"};
+    var root=document.documentElement;
+    var wrap=document.getElementById('lang'),
+        btn=document.getElementById('langBtn'),
+        menu=document.getElementById('langMenu');
+
+    function pick(){
+      var saved=localStorage.getItem('gr-lang');
+      if(saved&&I18N[saved]) return saved;               // explicit choice wins
+      var prefs=navigator.languages||[navigator.language||'en'];
+      for(var i=0;i<prefs.length;i++){                    // first supported device language
+        var n=(prefs[i]||'').slice(0,2).toLowerCase();
+        if(I18N[n]) return n;
+      }
+      return 'en';
+    }
+    function apply(lang){
+      var d=I18N[lang]||I18N.en, base=I18N.en;
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        var k=el.getAttribute('data-i18n'), v=d[k]!=null?d[k]:base[k];
+        if(v!=null) el.textContent=v;
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(function(el){
+        var k=el.getAttribute('data-i18n-html'), v=d[k]!=null?d[k]:base[k];
+        if(v!=null) el.innerHTML=v;
+      });
+      if(d['meta.title']) document.title=d['meta.title'];
+      root.setAttribute('lang',lang);
+      btn.textContent=CODE[lang]||'EN';
+      menu.querySelectorAll('button').forEach(function(b){
+        b.setAttribute('aria-current', b.getAttribute('data-lang')===lang?'true':'false');
+      });
+    }
+    function toggle(open){
+      menu.classList.toggle('open',open);
+      btn.setAttribute('aria-expanded',open?'true':'false');
+    }
+    btn.addEventListener('click',function(e){
+      e.stopPropagation(); toggle(!menu.classList.contains('open'));
+    });
+    menu.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){
+        var l=b.getAttribute('data-lang');
+        localStorage.setItem('gr-lang',l); apply(l); toggle(false);
+      });
+    });
+    document.addEventListener('click',function(e){ if(!wrap.contains(e.target)) toggle(false); });
+    addEventListener('keydown',function(e){ if(e.key==='Escape') toggle(false); });
+
+    apply(pick());
+  })();
+
   // Theme toggle (persisted)
   (function(){
     var root=document.documentElement, btn=document.getElementById('themeBtn');
