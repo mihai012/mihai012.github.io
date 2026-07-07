@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Garden Reads — Read. Listen. Understand.</title>
 <meta name="description" content="A calm, private home for the books you already own — with a local AI that reads along, completely offline.">
-<link rel="icon" type="image/svg+xml" href="../mihai012.github.io/img/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="../img/favicon.svg">
 <style>
   /* ── Brand tokens (from the app's own design system) ─────────────────── */
   :root{
-    --paper:#f4f1e7; --card:#fbf9f2; --ink:#2c2418; --muted:#6b6553;
-    --olive:#4f7d2e; --olive-ink:#3f6b24; --line:#e2ddcd; --forest:#1a2415;
+    --paper:#a5c98f; --card:#edf3e4; --ink:#22301b; --muted:#46543a;
+    --olive:#3f6b24; --olive-ink:#2f5119; --line:#8bb277; --forest:#1a2415;
     --forest-2:#22301d; --on-forest:#f4f1e7;
     --shadow:0 22px 50px -22px rgba(20,26,12,.55);
     --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
@@ -26,8 +26,8 @@
     }
   }
   :root[data-theme="light"]{
-    --paper:#f4f1e7; --card:#fbf9f2; --ink:#2c2418; --muted:#6b6553;
-    --olive:#4f7d2e; --olive-ink:#3f6b24; --line:#e2ddcd; --forest:#1a2415;
+    --paper:#a5c98f; --card:#edf3e4; --ink:#22301b; --muted:#46543a;
+    --olive:#3f6b24; --olive-ink:#2f5119; --line:#8bb277; --forest:#1a2415;
     --forest-2:#22301d; --on-forest:#f4f1e7; --shadow:0 22px 50px -22px rgba(20,26,12,.55);
   }
   :root[data-theme="dark"]{
@@ -40,7 +40,7 @@
   html{scroll-behavior:smooth;}
   body{
     margin:0; background:var(--paper); color:var(--ink);
-    font-family:var(--sans); font-size:17px; line-height:1.65;
+    font-family:var(--sans); font-size:18.5px; line-height:1.65;
     -webkit-font-smoothing:antialiased; overflow-x:hidden;
   }
   a{color:var(--olive-ink); text-underline-offset:3px;}
@@ -65,15 +65,18 @@
     backdrop-filter:blur(8px); padding:10px 28px; }
   .topbar .mark{display:flex; align-items:center; gap:9px; opacity:0; transition:opacity .35s ease; pointer-events:none;}
   .topbar.solid .mark{opacity:1; pointer-events:auto;}
-  .topbar .mark img{height:22px; width:auto;}
+  .topbar .mark img{height:30px; width:auto;}
   .topbar .right{display:flex; align-items:center; gap:10px; margin-left:auto;}
   .btn{
     font-family:var(--sans); font-weight:600; font-size:.9rem;
     padding:9px 18px; border-radius:999px; border:0; cursor:pointer;
-    background:var(--olive); color:#fff; text-decoration:none; white-space:nowrap;
+    background:#8bbe5f; color:#16210d; text-decoration:none; white-space:nowrap;
     transition:transform .12s ease, filter .12s ease; box-shadow:0 6px 16px -6px rgba(79,125,46,.7);
   }
   .btn:hover{transform:translateY(-1px); filter:brightness(1.05);}
+  .btn.ghost{background:transparent; color:var(--on-forest); box-shadow:none; border:1px solid rgba(255,255,255,.3);}
+  .btn.ghost:hover{background:rgba(255,255,255,.1); filter:none;}
+  @media (max-width:600px){ .topbar .btn.ghost{display:none;} }
   .btn:focus-visible, a:focus-visible, .theme-btn:focus-visible{outline:2px solid var(--olive); outline-offset:3px; border-radius:6px;}
   .theme-btn{
     width:38px; height:38px; border-radius:999px; border:1px solid rgba(255,255,255,.22);
@@ -87,7 +90,7 @@
   .hero{
     position:relative; color:var(--on-forest); text-align:center;
     padding:132px 20px 40px; overflow:hidden;
-    background:var(--forest-2) url("../mihai012.github.io/img/hero-bg.webp") center top/cover no-repeat;
+    background:var(--forest-2) url("../img/hero-bg.webp") center top/cover no-repeat;
   }
   .hero::after{content:''; position:absolute; inset:0;
     background:linear-gradient(180deg, rgba(12,18,8,.32), rgba(12,18,8,.15) 40%, var(--paper) 99%);}
@@ -108,21 +111,36 @@
   .badge:hover{transform:translateY(-2px);}
   .hero .note{margin:16px 0 0; font-size:.86rem; color:rgba(255,255,255,.72);}
 
-  /* Three-phone fan */
-  .fan{display:flex; justify-content:center; align-items:flex-end; gap:0; margin:54px auto 0; height:clamp(340px,44vw,430px);}
-  .fan .phone{margin:0 -26px;}
-  .fan .phone.side{width:clamp(150px,20vw,205px);}
+  /* Three-phone fan — hover any phone to straighten it and bring it to the front */
+  .fan{display:flex; justify-content:center; align-items:flex-end; gap:0; margin:48px auto 0;}
+  .fan .phone{margin:0 -26px; position:relative; z-index:1; cursor:pointer; will-change:transform;
+    transition:transform .34s cubic-bezier(.2,.7,.2,1), filter .34s ease;}
+  .fan .phone img{transition:filter .34s ease;}
+  .fan .phone.side{width:clamp(180px,23vw,242px);}
   .fan .phone.left{transform:rotate(-9deg) translateY(26px);}
   .fan .phone.right{transform:rotate(9deg) translateY(26px);}
-  .fan .phone.center{width:clamp(180px,24vw,244px); z-index:2; position:relative;}
+  .fan .phone.center{width:clamp(196px,25vw,264px); z-index:2; transform:translateY(16px);}
+  /* Bring the hovered phone upright, lifted, scaled, and above its neighbours */
+  .fan .phone:hover{z-index:5; transform:rotate(0deg) translateY(-10px) scale(1.06);}
+  .fan .phone.center:hover{transform:translateY(-14px) scale(1.06);}
+  .fan .phone:hover img{filter:drop-shadow(0 32px 52px rgba(20,26,12,.5));}
 
-  /* Device frame */
-  .phone{
-    background:#12140e; border-radius:2.1rem; padding:.42rem;
-    box-shadow:var(--shadow), 0 0 0 1px rgba(255,255,255,.04) inset;
-    width:clamp(210px,60vw,280px);
-  }
-  .phone img{border-radius:1.7rem; width:100%;}
+  /* Click a hero phone to inspect the full screenshot */
+  #lb{position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center;
+    background:rgba(8,10,6,.9); backdrop-filter:blur(5px); padding:5vh 24px; cursor:zoom-out;}
+  #lb.open{display:flex;}
+  #lb img{max-height:90vh; max-width:min(430px,92vw); width:auto;
+    filter:drop-shadow(0 24px 64px rgba(0,0,0,.6)); animation:lbin .28s cubic-bezier(.2,.7,.2,1);}
+  #lb .hint{position:fixed; bottom:22px; left:0; right:0; text-align:center; color:rgba(255,255,255,.6);
+    font-size:.82rem; letter-spacing:.02em;}
+  @keyframes lbin{from{opacity:0; transform:scale(.94);} to{opacity:1; transform:none;}}
+  @media (prefers-reduced-motion:reduce){ #lb img{animation:none;} }
+
+  /* Screenshots already include their own device frame — no extra bezel, just a soft lift.
+     Every phone is clickable (opens the lightbox) and lifts on hover. */
+  .phone{width:clamp(210px,60vw,280px); cursor:pointer; will-change:transform;
+    transition:transform .34s cubic-bezier(.2,.7,.2,1), filter .34s ease;}
+  .phone img{width:100%; filter:drop-shadow(0 6px 14px rgba(0,0,0,.3)) drop-shadow(0 26px 46px rgba(0,0,0,.38)); transition:filter .34s ease;}
 
   /* ── Sections ─────────────────────────────────────────────────────────── */
   .section{padding:clamp(64px,9vw,120px) 0;}
@@ -135,23 +153,45 @@
   .feature .copy h2{font-size:clamp(1.7rem,3.6vw,2.5rem); line-height:1.12; letter-spacing:-.01em;}
   .feature .copy p{color:var(--muted); font-size:1.06rem; margin:16px 0 0; max-width:440px;}
   .feature .art{display:flex; justify-content:center;}
-  .feature .art.tilt .phone{transform:rotate(-3deg);}
-  .feature.reverse .art.tilt .phone{transform:rotate(3deg);}
+  /* Lean each phone's BOTTOM toward its copy (copy sits on the opposite side each row) */
+  .feature .art.tilt .phone{transform:rotate(3deg);}
+  .feature.reverse .art.tilt .phone{transform:rotate(-3deg);}
+  /* Hover a feature phone: straighten upright, lift, and scale */
+  .feature .art.tilt .phone:hover{transform:rotate(0deg) translateY(-10px) scale(1.04);}
+  .feature .art .phone:hover img{filter:drop-shadow(0 30px 50px rgba(20,26,12,.46));}
+  /* Two-phone cluster — an outward fan (rotation by side); the phone nearest the copy
+     (.front) overlaps on top, regardless of which side it's on. */
+  .duo{display:flex; justify-content:center; align-items:flex-end;}
+  .duo .phone{width:clamp(135px,25vw,192px); position:relative; margin:0 -22px;}
+  .duo .phone:first-child{transform:rotate(-6deg) translateY(6px);}  /* left phone leans top-left */
+  .duo .phone:last-child{transform:rotate(6deg) translateY(6px);}    /* right phone leans top-right */
+  .duo .phone.front{z-index:2;}   /* nearest the copy → on top */
+  .duo .phone.back{z-index:1;}
+  .duo .phone:hover{transform:rotate(0deg) translateY(-8px) scale(1.05); z-index:5;}
+  .duo .phone:hover img{filter:drop-shadow(0 30px 50px rgba(20,26,12,.46));}
 
   .chips{list-style:none; padding:0; margin:22px 0 0; display:flex; flex-wrap:wrap; gap:9px;}
   .chips li{
     font-size:.84rem; font-weight:600; color:var(--olive-ink);
-    background:color-mix(in srgb, var(--olive) 12%, transparent);
+    background:var(--card);
     border:1px solid color-mix(in srgb, var(--olive) 26%, transparent);
     padding:6px 13px; border-radius:999px;
   }
 
   /* Principles band */
-  .band{background:var(--forest-2); color:var(--on-forest);}
-  .band .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(24px,4vw,56px);}
-  .band h3{font-size:1.28rem; color:#fff; margin-bottom:8px;}
-  .band p{color:rgba(255,255,255,.72); font-size:.98rem; margin:0;}
+  .band{background:var(--card); color:var(--ink);}
+  .band .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(24px,4vw,56px); text-align:center;}
+  .band h3{font-size:1.28rem; color:var(--ink); margin-bottom:8px;}
+  .band p{color:var(--muted); font-size:.98rem; margin:0;}
   .band .leaf{font-size:1.5rem; margin-bottom:12px;}
+  /* Three-phone fan inside the Read feature (clean · illustrated · OLED) */
+  .trio{display:flex; justify-content:center; align-items:flex-end;}
+  .trio .phone{width:clamp(128px,20vw,174px); position:relative; margin:0 -18px;}
+  .trio .phone:nth-child(1){transform:rotate(-8deg) translateY(12px); z-index:1;}
+  .trio .phone:nth-child(2){transform:translateY(-2px); z-index:3;}
+  .trio .phone:nth-child(3){transform:rotate(8deg) translateY(12px); z-index:2;}
+  .trio .phone:hover{transform:rotate(0deg) translateY(-8px) scale(1.06); z-index:5;}
+  .trio .phone:hover img{filter:drop-shadow(0 30px 50px rgba(20,26,12,.46));}
 
   /* Themes strip */
   .themes h2{font-size:clamp(1.7rem,3.6vw,2.5rem); text-align:center; letter-spacing:-.01em;}
@@ -161,6 +201,8 @@
   .strip::-webkit-scrollbar-thumb{background:var(--line); border-radius:99px;}
   .strip figure{margin:0; flex:0 0 auto; width:190px; scroll-snap-align:center; text-align:center;}
   .strip .phone{width:190px;}
+  .strip .phone:hover{transform:translateY(-6px) scale(1.02);}
+  .strip .phone:hover img{filter:drop-shadow(0 24px 44px rgba(20,26,12,.42));}
   .strip figcaption{margin-top:12px; font-size:.82rem; font-weight:600; color:var(--muted); letter-spacing:.02em;}
 
   /* Free vs Pro */
@@ -175,15 +217,18 @@
   .plan li{position:relative; padding-left:26px; font-size:.98rem;}
   .plan li::before{content:'🌿'; position:absolute; left:0; top:0; font-size:.9rem;}
 
-  /* Final CTA + footer */
-  .final{background:var(--forest-2); color:var(--on-forest); text-align:center; padding:clamp(70px,10vw,120px) 28px;}
-  .final h2{font-size:clamp(2rem,5vw,3.2rem); color:#fff; letter-spacing:-.01em;}
-  .final p{color:rgba(255,255,255,.75); margin:14px auto 26px; max-width:440px;}
-  footer{background:var(--forest); color:rgba(244,241,231,.62); text-align:center; padding:44px 28px; font-size:.84rem;}
-  footer img{height:20px; width:auto; margin:0 auto 16px; opacity:.9;}
-  footer a{color:rgba(244,241,231,.8);}
-  footer .links{display:flex; gap:22px; justify-content:center; margin:10px 0 16px; flex-wrap:wrap;}
-  footer .credit{opacity:.7; font-size:.8rem;}
+  /* Closing — one intentional outro that bookends the hero on the wordmark */
+  .final{color:var(--ink); text-align:center; padding:clamp(74px,9vw,112px) 28px 40px;
+    background:var(--card);}
+  .final-guide{margin:20px auto 0;}
+  .final-guide a{color:var(--olive-ink); font-size:.92rem; text-decoration:underline; text-underline-offset:3px;}
+  .final-guide a:hover{color:var(--ink);}
+  .final h2{font-size:clamp(2rem,5vw,3.2rem); color:var(--ink); letter-spacing:-.01em; margin:0 auto;}
+  .final p{color:var(--muted); margin:14px auto 26px; max-width:440px;}
+  .final-foot{max-width:600px; margin:56px auto 0; padding-top:26px; border-top:1px solid var(--line);}
+  .final-foot .links{display:flex; gap:22px; justify-content:center; margin:0 0 12px; flex-wrap:wrap;}
+  .final-foot .links a{color:var(--olive-ink); font-size:.86rem;}
+  .final-foot .credit{color:rgba(255,255,255,.5); font-size:.82rem; margin:0; font-style:italic;}
 
   /* Reveal on scroll */
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
@@ -205,7 +250,7 @@
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto;}
     .reveal{opacity:1; transform:none; transition:none;}
-    .fan .phone,.feature .art .phone{transform:none !important;}
+    .fan .phone,.feature .art .phone,.strip .phone{transform:none !important;}
     .badge:hover,.btn:hover{transform:none;}
   }
 </style>
@@ -215,153 +260,111 @@
 <!-- Persistent top bar -->
 <div class="topbar" id="topbar">
   <a class="mark" href="#top" aria-label="Garden Reads home">
-    <img src="../mihai012.github.io/img/wordmark-white.svg" alt="Garden Reads">
+    <img src="../img/wordmark-white.svg" alt="Garden Reads">
   </a>
   <div class="right">
     <button class="theme-btn" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle theme">◐</button>
     <a class="btn" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener">Get the app</a>
+    <a class="btn ghost" href="../guide/">Full app guide</a>
   </div>
 </div>
 
 <!-- Hero -->
 <header class="hero" id="top">
-  <img class="wordmark" src="../mihai012.github.io/img/wordmark-white.svg" alt="Garden Reads">
+  <img class="wordmark" src="../img/wordmark-white.svg" alt="Garden Reads">
   <h1>Read. Listen. <span class="dim">Understand.</span></h1>
   <p class="sub">A calm, private home for the books you already own — with a local AI that reads along, completely offline.</p>
   <a class="badge" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play">
-    <img src="../mihai012.github.io/img/google-play-badge.svg" alt="Get it on Google Play">
+    <img src="../img/google-play-badge.svg" alt="Get it on Google Play">
   </a>
   <p class="note">No account · No tracking · No subscription</p>
 
   <div class="fan">
-    <div class="phone side left"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="A clean reading page in Garden Reads"></div>
-    <div class="phone center"><img loading="lazy" src="../mihai012.github.io/img/AI/AI%20Chat.webp" alt="Asking the on-device AI about a passage"></div>
-    <div class="phone side right"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Audio%20Player%20Light.webp" alt="The built-in audiobook player"></div>
+    <div class="phone side left"><img loading="lazy" src="../img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="A clean reading page in Garden Reads"></div>
+    <div class="phone center"><img loading="lazy" src="../img/AI/AI%20Chat.webp" alt="Asking the on-device AI about a passage"></div>
+    <div class="phone side right"><img loading="lazy" src="../img/Reader%20and%20Player/Audio%20Player%20Light.webp" alt="The built-in audiobook player"></div>
   </div>
 </header>
 
 <!-- Thesis -->
 <section class="thesis reveal">
-  <p class="eyebrow">A different kind of reader</p>
+  <p class="eyebrow">A quiet place to read</p>
   <h2>A calm home for the books you already own.</h2>
-  <p>Most reading apps are storefronts first and readers second. Garden Reads is the opposite — no store, no account, nothing leaving your phone. Import your library once and it’s genuinely yours.</p>
+  <p>Garden Reads asks for nothing in return — no store, no accounts, no data collection, and no subscription to stress about every month.</p>
 </section>
 
-<!-- Feature: Library -->
+<!-- Read -->
 <section class="section">
   <div class="wrap">
     <div class="feature reverse reveal">
       <div class="copy">
-        <p class="eyebrow">Your whole library</p>
-        <h2>Everything, side by side.</h2>
-        <p>EPUB, MOBI, PDF, TXT — plus comics and audiobooks — in one quiet place. Sort it, shelve it by genre or series, and keep private books behind a locked shelf.</p>
-        <ul class="chips">
-          <li>EPUB · PDF · CBZ · M4B</li>
-          <li>Custom shelves</li>
-          <li>Secure library</li>
-        </ul>
-      </div>
-      <div class="art tilt">
-        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Library/Light%204x4.webp" alt="The Garden Reads library grid"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Feature: AI -->
-<section class="section">
-  <div class="wrap">
-    <div class="feature reveal">
-      <div class="copy">
-        <p class="eyebrow">Local AI · Ask Gemma</p>
-        <h2>Ask anything. Nothing leaves your phone.</h2>
-        <p>Powered by Google’s Gemma, running entirely on-device via LiteRT. Select a word or a passage and ask — it answers in the context of your book, with no internet and no account.</p>
-        <ul class="chips">
-          <li>Deep Think</li>
-          <li>Spoiler-free mode</li>
-          <li>Speaks your book’s language</li>
-        </ul>
-      </div>
-      <div class="art tilt">
-        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/AI/AI%20Chat.webp" alt="Asking Garden Reads' local AI to explain a passage"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Feature: Reader -->
-<section class="section">
-  <div class="wrap">
-    <div class="feature reverse reveal">
-      <div class="copy">
-        <p class="eyebrow">The reader</p>
+        <p class="eyebrow">Read</p>
         <h2>A page you can make your own.</h2>
-        <p>Fonts, weight, spacing, margins, page-turn or scroll — dialed exactly how you like. A clean, distraction-free page that stays out of the way.</p>
+        <p>Garden Reads gives you every customization option you can think of — each one carefully crafted for a calm, immersive read.</p>
+        <p>And with Zen mode, the world goes quiet while you read — notifications, clock and battery hidden. Just you and the book.</p>
         <ul class="chips">
           <li>Adjustable everything</li>
+          <li>Zen mode</li>
           <li>Paginated or scroll</li>
-          <li>Realistic paper</li>
         </ul>
       </div>
-      <div class="art tilt">
-        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="A clean, distraction-free reading page"></div>
+      <div class="art">
+        <div class="trio">
+          <div class="phone"><img loading="lazy" src="../img/Reader%20and%20Player/Clean%20Page.webp" alt="A clean white-paper reading page"></div>
+          <div class="phone"><img loading="lazy" src="../img/Reader%20and%20Player/Reader%20Epub%20Clean.webp" alt="An illustrated reading page with a captioned figure"></div>
+          <div class="phone"><img loading="lazy" src="../img/Reader%20and%20Player/Different%20Reader%20Customizations/Oled.webp" alt="An immersive OLED dark reading page"></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Themes strip -->
-<section class="section themes reveal">
-  <div class="wrap">
-    <h2>Dress the page for your mood.</h2>
-    <p class="lead">Light, Sepia, true-black OLED, or the four seasons — each on its own realistic paper texture.</p>
-    <div class="strip">
-      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Sepia.webp" alt="Sepia reading theme"></div><figcaption>Sepia</figcaption></figure>
-      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Oled.webp" alt="OLED black reading theme"></div><figcaption>OLED black</figcaption></figure>
-      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Spring.webp" alt="Spring seasonal theme"></div><figcaption>Spring</figcaption></figure>
-      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Summer.webp" alt="Summer seasonal theme"></div><figcaption>Summer</figcaption></figure>
-      <figure><div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Different%20Reader%20Customizations/Kraft%20paper.webp" alt="Kraft paper theme"></div><figcaption>Kraft paper</figcaption></figure>
-    </div>
-  </div>
-</section>
-
-<!-- Feature: Listen -->
+<!-- Listen -->
 <section class="section">
   <div class="wrap">
     <div class="feature reveal">
       <div class="copy">
         <p class="eyebrow">Listen</p>
         <h2>Switch to audio anytime.</h2>
-        <p>A full audiobook player — chapters, adjustable speed, bookmarks, sleep timer — plus text-to-speech for any ebook. Read a little, listen a little, pick up right where you left off.</p>
+        <p>A full audiobook player — chapters, adjustable speed, bookmarks, sleep timer. Connect your Audiobookshelf server to stream your library, with your progress synced everywhere.</p>
         <ul class="chips">
-          <li>Audiobooks (M4B · MP3)</li>
-          <li>Text-to-speech</li>
+          <li>Audiobookshelf</li>
+          <li>Audiobooks</li>
           <li>Sleep timer</li>
         </ul>
       </div>
-      <div class="art tilt">
-        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Reader%20and%20Player/Audio%20Player%20Dark.webp" alt="The audiobook player playing a title"></div>
+      <div class="art">
+        <div class="trio">
+          <div class="phone"><img loading="lazy" src="../img/Importing%20Books/Audiobookshelf%20Import.webp" alt="Choosing which audiobooks to import from a connected Audiobookshelf library"></div>
+          <div class="phone"><img loading="lazy" src="../img/Reader%20and%20Player/Audio%20Player%20Dark.webp" alt="The audiobook player playing a title"></div>
+          <div class="phone"><img loading="lazy" src="../img/Tools/Sleep%20Timer.webp" alt="The audiobook sleep timer"></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Feature: Understand -->
+<!-- Understand -->
 <section class="section">
   <div class="wrap">
     <div class="feature reverse reveal">
       <div class="copy">
         <p class="eyebrow">Understand</p>
-        <h2>Look it up. Save it. Share it.</h2>
-        <p>Tap any word for the offline dictionary, keep it in your vocabulary list, or turn a highlight into a quote card worth sharing.</p>
+        <h2>Ask it anything. None of your thoughts leave the app.</h2>
+        <p>Powered by Google’s Gemma, running entirely on-device via LiteRT. Select a word or a passage and ask — it answers in the context of your book, with no internet and no account.</p>
+        <p>And paired with dictionaries, translations and annotations, nothing can stop you from getting the most out of your books.</p>
         <ul class="chips">
-          <li>Offline dictionary</li>
-          <li>Vocabulary list</li>
-          <li>Beautiful quote cards</li>
+          <li>Annotations</li>
+          <li>Local AI</li>
+          <li>Dictionaries &amp; Translations</li>
         </ul>
       </div>
-      <div class="art tilt">
-        <div class="phone"><img loading="lazy" src="../mihai012.github.io/img/Tools/Dictionary%20Offline%20Pop-Up.webp" alt="The offline dictionary pop-up over a page"></div>
+      <div class="art">
+        <div class="trio">
+          <div class="phone"><img loading="lazy" src="../img/Tools/Text%20Pop-Up%202.webp" alt="The text selection bar with dictionary, translate and Ask Gemma"></div>
+          <div class="phone"><img loading="lazy" src="../img/AI/AI%20Chat.webp" alt="Asking Garden Reads' local AI to explain a passage"></div>
+          <div class="phone"><img loading="lazy" src="../img/Dictionary/dict%20and%20translate.webp" alt="Looking up a word in the offline dictionary with an instant translation"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -372,19 +375,19 @@
   <div class="wrap">
     <div class="grid">
       <div>
-        <div class="leaf">🪴</div>
-        <h3>You own your library</h3>
-        <p>Books live on your device — nothing is streamed from us. Optional sync uses <em>your</em> Google Drive, carrying only what you choose.</p>
+        <div class="leaf">🪷</div>
+        <h3>Zen</h3>
+        <p>Soft theming, a living garden scene, and Zen mode — open a book and your whole phone goes quiet.</p>
       </div>
       <div>
         <div class="leaf">🔒</div>
-        <h3>Private by design</h3>
-        <p>The AI runs entirely on-device — no cloud calls, ever. Dictionaries and reading data stay local unless you turn on sync.</p>
+        <h3>Private</h3>
+        <p>No account, no tracking, no data collection. The AI runs on-device, and nothing leaves your phone unless you turn on your own Drive sync.</p>
       </div>
       <div>
-        <div class="leaf">🌿</div>
-        <h3>Calm, not busy</h3>
-        <p>Soft theming, sensible defaults, and controls that stay out of the way while you read.</p>
+        <div class="leaf">✨</div>
+        <h3>Powerful</h3>
+        <p>On-device AI, Dictionary, Translations, Annotations — every serious reading tool, without the clutter.</p>
       </div>
     </div>
   </div>
@@ -394,51 +397,52 @@
 <section class="section reveal">
   <div class="wrap">
     <div class="thesis" style="padding-top:0; padding-bottom:36px;">
-      <p class="eyebrow">Simple, honest pricing</p>
+      <p class="eyebrow">Simple pricing</p>
       <h2>Buy once. Own it forever.</h2>
+      <p>No other subscription to add to the pile.</p>
     </div>
     <div class="plans">
       <div class="plan">
         <span class="tag">Free</span>
-        <h3>Genuinely usable</h3>
-        <p class="price">No trial, no nagging</p>
+        <h3>Everything that matters, free</h3>
+        <p class="price">The powerful features cost nothing</p>
         <ul>
-          <li>Read, listen &amp; annotate</li>
-          <li>On-device AI &amp; offline dictionary</li>
-          <li>Your whole library, offline</li>
+          <li>On-device AI in every book</li>
+          <li>Zen mode, seasonal themes &amp; audiobooks</li>
+          <li>Highlights, notes, insights &amp; Drive sync</li>
         </ul>
       </div>
       <div class="plan pro">
         <span class="tag">Garden Reads Pro</span>
-        <h3>One-time unlock</h3>
+        <h3>Unlock everything</h3>
         <p class="price">No subscription. Ever.</p>
         <ul>
-          <li>Removes ads</li>
-          <li>Unlocks every Pro feature</li>
-          <li>All future updates included</li>
+          <li>Offline dictionaries &amp; saved vocabulary</li>
+          <li>Secure Library &amp; deeper customization</li>
+          <li>No ads — nothing to disturb the garden</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Final CTA -->
+<!-- Closing — bookends the hero on the wordmark -->
 <section class="final reveal">
-  <h2>Come read in the garden.</h2>
-  <p>Free to start. Yours to keep. Completely offline.</p>
+  <h2>Start reading.</h2>
+  <p>Free, no account — browse free books directly in the app.</p>
   <a class="badge" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" aria-label="Get it on Google Play">
-    <img src="../mihai012.github.io/img/google-play-badge.svg" alt="Get it on Google Play">
+    <img src="../img/google-play-badge.svg" alt="Get it on Google Play">
   </a>
+  <p class="final-guide"><a href="../guide/">See the complete list of features in the full guide →</a></p>
+  <footer class="final-foot">
+    <div class="links">
+      <a href="../privacy/">Privacy policy</a>
+      <a href="../legal/">Legal notices</a>
+    </div>
+  </footer>
 </section>
 
-<footer>
-  <img src="../mihai012.github.io/img/wordmark-white.svg" alt="Garden Reads">
-  <div class="links">
-    <a href="../mihai012.github.io/privacy/">Privacy policy</a>
-    <a href="../mihai012.github.io/legal/">Legal notices</a>
-  </div>
-  <p class="credit">Read deeply, privately, and at your own pace. 🌱</p>
-</footer>
+<div id="lb" aria-hidden="true"><img id="lbimg" src="" alt=""><span class="hint">Click anywhere to close · Esc</span></div>
 
 <script>
   // Theme toggle (persisted)
@@ -470,6 +474,21 @@
       entries.forEach(function(en){ if(en.isIntersecting){en.target.classList.add('in'); io.unobserve(en.target);} });
     },{rootMargin:'0px 0px -12% 0px', threshold:.12});
     els.forEach(function(e){io.observe(e);});
+  })();
+
+  // Click a hero phone to inspect the full screenshot
+  (function(){
+    var lb=document.getElementById('lb'), lbimg=document.getElementById('lbimg');
+    document.querySelectorAll('.phone').forEach(function(p){
+      p.addEventListener('click',function(){
+        var img=p.querySelector('img');
+        lbimg.src=img.currentSrc||img.src; lbimg.alt=img.alt;
+        lb.classList.add('open'); lb.setAttribute('aria-hidden','false');
+      });
+    });
+    function close(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); }
+    lb.addEventListener('click',close);
+    addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
   })();
 </script>
 </body>
