@@ -107,6 +107,34 @@
   .lang-menu button:hover{background:rgba(255,255,255,.1);}
   .lang-menu button[aria-current="true"]{background:rgba(139,190,95,.24); color:#fff; font-weight:600;}
 
+  /* Mobile hamburger drawer (Language · Theme · Guide) */
+  .menu-wrap{position:relative; display:none;}
+  .menu-btn{font-size:1.15rem;}
+  .menu-panel{
+    position:absolute; top:calc(100% + 10px); right:0; min-width:198px; margin:0; padding:8px;
+    background:color-mix(in srgb, var(--forest) 94%, #000); backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.14); border-radius:16px;
+    box-shadow:0 20px 44px -18px rgba(0,0,0,.75);
+    opacity:0; transform:translateY(-6px); pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease; z-index:60;
+  }
+  .menu-panel.open{opacity:1; transform:none; pointer-events:auto;}
+  .menu-head{font-size:.68rem; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+    color:rgba(255,255,255,.45); margin:6px 12px 4px;}
+  .menu-panel button, .menu-panel a.menu-row{
+    display:block; width:100%; text-align:left; background:transparent; border:0; cursor:pointer;
+    color:var(--on-forest); font-family:var(--sans); font-size:.95rem; text-decoration:none;
+    padding:10px 12px; border-radius:9px; transition:background .15s ease;
+  }
+  .menu-panel button:hover, .menu-panel a.menu-row:hover{background:rgba(255,255,255,.1);}
+  .menu-langs button[aria-current="true"]{background:rgba(139,190,95,.24); color:#fff; font-weight:600;}
+  .menu-extra{margin-top:6px; padding-top:6px; border-top:1px solid rgba(255,255,255,.12);}
+  @media (max-width:600px){
+    .menu-wrap{display:flex;}
+    .lang{display:none;}
+    #themeBtn{display:none;}
+  }
+
   /* ── Hero ─────────────────────────────────────────────────────────────── */
   .hero{
     position:relative; color:var(--on-forest); text-align:center;
@@ -119,7 +147,7 @@
   .hero .wordmark{width:clamp(240px,52vw,470px); height:auto; margin:0 auto 22px;
     filter:drop-shadow(0 3px 18px rgba(0,0,0,.55));}
   .hero h1{
-    font-size:clamp(2.5rem,7vw,4.6rem); line-height:1.02; letter-spacing:-.01em;
+    font-size:clamp(2.5rem,7vw,4.6rem); line-height:1.12; letter-spacing:-.01em;
     color:#fff; text-shadow:0 2px 20px rgba(0,0,0,.4); margin:0 auto;
   }
   .hero h1 .dim{color:rgba(255,255,255,.62);}
@@ -249,7 +277,9 @@
   .final-foot{max-width:600px; margin:56px auto 0; padding-top:26px; border-top:1px solid var(--line);}
   .final-foot .links{display:flex; gap:22px; justify-content:center; margin:0 0 12px; flex-wrap:wrap;}
   .final-foot .links a{color:var(--olive-ink); font-size:.86rem;}
-  .final-foot .credit{color:rgba(255,255,255,.5); font-size:.82rem; margin:0; font-style:italic;}
+  .final-foot .credit{color:var(--muted); font-size:.8rem; margin:14px 0 0;}
+  .final-foot .credit a{color:var(--muted); text-decoration:underline; text-underline-offset:2px;}
+  .final-foot .credit a:hover{color:var(--ink);}
 
   /* Reveal on scroll */
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
@@ -296,9 +326,27 @@
         <li><button role="menuitem" data-lang="es">Español</button></li>
       </ul>
     </div>
-    <button class="theme-btn" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle theme">◐</button>
+    <button class="theme-btn" id="themeBtn" data-theme-toggle aria-label="Toggle light or dark theme" title="Toggle theme">◐</button>
     <a class="btn" href="https://play.google.com/store/apps/details?id=com.gardenreading" target="_blank" rel="noopener" data-i18n="nav.get">Get the app</a>
     <a class="btn ghost" href="../guide/" data-i18n="nav.guide">Full app guide</a>
+    <div class="menu-wrap" id="menu">
+      <button class="theme-btn menu-btn" id="menuBtn" aria-label="Menu" aria-haspopup="true" aria-expanded="false">☰</button>
+      <div class="menu-panel" id="menuPanel" role="menu">
+        <p class="menu-head" data-i18n="menu.lang">Language</p>
+        <div class="menu-langs">
+          <button role="menuitem" data-lang="en">English</button>
+          <button role="menuitem" data-lang="fr">Français</button>
+          <button role="menuitem" data-lang="de">Deutsch</button>
+          <button role="menuitem" data-lang="pt">Português</button>
+          <button role="menuitem" data-lang="ro">Română</button>
+          <button role="menuitem" data-lang="es">Español</button>
+        </div>
+        <div class="menu-extra">
+          <button class="menu-row" data-theme-toggle role="menuitem" data-i18n="menu.theme">Theme</button>
+          <a class="menu-row" href="../guide/" role="menuitem" data-i18n="nav.guide">Full app guide</a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -472,6 +520,7 @@
       <a href="../privacy/" data-i18n="foot.privacy">Privacy policy</a>
       <a href="../legal/" data-i18n="foot.legal">Legal notices</a>
     </div>
+    <p class="credit">Photo by <a href="https://unsplash.com/@oww?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank" rel="noopener">Geio Tischler</a> on <a href="https://unsplash.com/photos/green-grass-field-photography-7hww7t6NLcg?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" target="_blank" rel="noopener">Unsplash</a></p>
   </footer>
 </section>
 
@@ -483,7 +532,7 @@
     var I18N = {
       en:{
         "meta.title":"Garden Reads — Read. Listen. Understand.",
-        "nav.get":"Get the app","nav.guide":"Full app guide",
+        "nav.get":"Get the app","nav.guide":"Full app guide","menu.lang":"Language","menu.theme":"Theme",
         "hero.h1":"Read. Listen. <span class=\"dim\">Understand.</span>",
         "hero.sub":"A calm, private home for the books you already own — with a local AI that reads along, completely offline.",
         "hero.note":"No account · No tracking · No subscription",
@@ -516,7 +565,7 @@
       },
       fr:{
         "meta.title":"Garden Reads — Lire. Écouter. Comprendre.",
-        "nav.get":"Obtenir l’app","nav.guide":"Guide complet",
+        "nav.get":"Obtenir l’app","nav.guide":"Guide complet","menu.lang":"Langue","menu.theme":"Thème",
         "hero.h1":"Lisez. Écoutez. <span class=\"dim\">Comprenez.</span>",
         "hero.sub":"Un espace calme et privé pour les livres que vous possédez déjà — avec une IA locale qui lit à vos côtés, entièrement hors ligne.",
         "hero.note":"Sans compte · Sans traçage · Sans abonnement",
@@ -549,7 +598,7 @@
       },
       de:{
         "meta.title":"Garden Reads — Lesen. Hören. Verstehen.",
-        "nav.get":"App holen","nav.guide":"Komplette Anleitung",
+        "nav.get":"App holen","nav.guide":"Komplette Anleitung","menu.lang":"Sprache","menu.theme":"Design",
         "hero.h1":"Lesen. Hören. <span class=\"dim\">Verstehen.</span>",
         "hero.sub":"Ein ruhiges, privates Zuhause für die Bücher, die Sie bereits besitzen — mit einer lokalen KI, die mitliest, völlig offline.",
         "hero.note":"Kein Konto · Kein Tracking · Kein Abo",
@@ -582,7 +631,7 @@
       },
       pt:{
         "meta.title":"Garden Reads — Ler. Ouvir. Entender.",
-        "nav.get":"Baixar o app","nav.guide":"Guia completo",
+        "nav.get":"Baixar o app","nav.guide":"Guia completo","menu.lang":"Idioma","menu.theme":"Tema",
         "hero.h1":"Leia. Ouça. <span class=\"dim\">Entenda.</span>",
         "hero.sub":"Um lar calmo e privado para os livros que você já tem — com uma IA local que lê junto com você, totalmente offline.",
         "hero.note":"Sem conta · Sem rastreamento · Sem assinatura",
@@ -615,7 +664,7 @@
       },
       ro:{
         "meta.title":"Garden Reads — Citește. Ascultă. Înțelege.",
-        "nav.get":"Descarcă aplicația","nav.guide":"Ghid complet",
+        "nav.get":"Descarcă aplicația","nav.guide":"Ghid complet","menu.lang":"Limbă","menu.theme":"Temă",
         "hero.h1":"Citește. Ascultă. <span class=\"dim\">Înțelege.</span>",
         "hero.sub":"Un spațiu calm și privat pentru cărțile pe care le ai deja — cu o inteligență artificială locală care citește alături de tine, complet offline.",
         "hero.note":"Fără cont · Fără urmărire · Fără abonament",
@@ -648,7 +697,7 @@
       },
       es:{
         "meta.title":"Garden Reads — Leer. Escuchar. Comprender.",
-        "nav.get":"Descargar la app","nav.guide":"Guía completa",
+        "nav.get":"Descargar la app","nav.guide":"Guía completa","menu.lang":"Idioma","menu.theme":"Tema",
         "hero.h1":"Lee. Escucha. <span class=\"dim\">Comprende.</span>",
         "hero.sub":"Un hogar tranquilo y privado para los libros que ya tienes — con una IA local que lee contigo, totalmente sin conexión.",
         "hero.note":"Sin cuenta · Sin rastreo · Sin suscripción",
@@ -709,7 +758,7 @@
       if(d['meta.title']) document.title=d['meta.title'];
       root.setAttribute('lang',lang);
       btn.textContent=CODE[lang]||'EN';
-      menu.querySelectorAll('button').forEach(function(b){
+      document.querySelectorAll('[data-lang]').forEach(function(b){
         b.setAttribute('aria-current', b.getAttribute('data-lang')===lang?'true':'false');
       });
     }
@@ -720,7 +769,7 @@
     btn.addEventListener('click',function(e){
       e.stopPropagation(); toggle(!menu.classList.contains('open'));
     });
-    menu.querySelectorAll('button').forEach(function(b){
+    document.querySelectorAll('[data-lang]').forEach(function(b){
       b.addEventListener('click',function(){
         var l=b.getAttribute('data-lang');
         localStorage.setItem('gr-lang',l); apply(l); toggle(false);
@@ -732,18 +781,29 @@
     apply(pick());
   })();
 
-  // Theme toggle (persisted)
+  // Theme toggle (persisted) — every [data-theme-toggle] control flips it
   (function(){
-    var root=document.documentElement, btn=document.getElementById('themeBtn');
+    var root=document.documentElement;
     var saved=localStorage.getItem('gr-theme');
     if(saved){root.setAttribute('data-theme',saved);}
-    btn.addEventListener('click',function(){
+    function toggle(){
       var cur=root.getAttribute('data-theme');
       if(!cur){cur=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
       var next=cur==='dark'?'light':'dark';
       root.setAttribute('data-theme',next);
       localStorage.setItem('gr-theme',next);
-    });
+    }
+    document.querySelectorAll('[data-theme-toggle]').forEach(function(b){ b.addEventListener('click',toggle); });
+  })();
+
+  // Mobile hamburger drawer
+  (function(){
+    var wrap=document.getElementById('menu'), btn=document.getElementById('menuBtn'), panel=document.getElementById('menuPanel');
+    if(!btn||!panel) return;
+    function toggle(o){ panel.classList.toggle('open',o); btn.setAttribute('aria-expanded',o?'true':'false'); }
+    btn.addEventListener('click',function(e){ e.stopPropagation(); toggle(!panel.classList.contains('open')); });
+    document.addEventListener('click',function(e){ if(!wrap.contains(e.target)) toggle(false); });
+    addEventListener('keydown',function(e){ if(e.key==='Escape') toggle(false); });
   })();
 
   // Top bar solidifies past the hero
