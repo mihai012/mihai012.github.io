@@ -142,10 +142,9 @@
   .menu-langs button[aria-current="true"]{background:rgba(139,190,95,.24); color:#fff; font-weight:600;}
   .menu-extra{margin-top:6px; padding-top:6px; border-top:1px solid rgba(255,255,255,.12);}
   .menu-panel a.menu-cta{
-    margin-top:8px; display:flex; align-items:center; gap:8px; font-weight:600;
+    margin-top:0; display:flex; align-items:center; gap:8px; font-weight:600;
     color:#a9d67e; background:rgba(139,190,95,.14); border:1px solid rgba(139,190,95,.4);
   }
-  .menu-panel a.menu-cta::before{content:'📖'; font-size:.95em;}
   .menu-panel a.menu-cta::after{content:'→'; margin-left:auto; opacity:.75; font-weight:400;}
   .menu-panel a.menu-cta:hover{background:rgba(139,190,95,.24);}
   @media (max-width:600px){
@@ -351,18 +350,16 @@
     <div class="menu-wrap" id="menu">
       <button class="theme-btn menu-btn" id="menuBtn" aria-label="Menu" aria-haspopup="true" aria-expanded="false">☰</button>
       <div class="menu-panel" id="menuPanel" role="menu">
-        <p class="menu-head" data-i18n="menu.lang">Language</p>
-        <div class="menu-langs">
+        <a class="menu-row menu-cta" href="guide/" role="menuitem" data-i18n="nav.guide">Full app guide</a>
+        <button class="menu-row" data-theme-toggle role="menuitem" data-i18n="menu.theme">Theme</button>
+        <div class="menu-langs menu-extra">
+          <p class="menu-head" data-i18n="menu.lang">Language</p>
           <button role="menuitem" data-lang="en">English</button>
           <button role="menuitem" data-lang="fr">Français</button>
           <button role="menuitem" data-lang="de">Deutsch</button>
           <button role="menuitem" data-lang="pt">Português</button>
           <button role="menuitem" data-lang="ro">Română</button>
           <button role="menuitem" data-lang="es">Español</button>
-        </div>
-        <div class="menu-extra">
-          <button class="menu-row" data-theme-toggle role="menuitem" data-i18n="menu.theme">Theme</button>
-          <a class="menu-row menu-cta" href="guide/" role="menuitem" data-i18n="nav.guide">Full app guide</a>
         </div>
       </div>
     </div>
